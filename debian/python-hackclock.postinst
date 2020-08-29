@@ -1,0 +1,19 @@
+#!/bin/bash
+
+BOOT_CONFIG=/boot/config.txt
+SYS_CONFIG=/etc/sysctl.conf
+MOD_CONFIG=/etc/modules
+
+# Set sysctl parameters
+if [ -e $SYS_CONFIG ] && grep -q -E "^kernel\.panic=" $SYS_CONFIG; then
+    echo "Not setting kernel panic reboot, already set"
+else
+    # If we have a kernel panic, reboot in 5 seconds
+    echo "Setting reboot on kernel panic"
+    echo "kernel.panic=5" | sudo tee -a $SYS_CONFIG
+fi
+
+# Boot upon start
+update-rc.d tallypi defaults
+
+echo "Please reboot your Raspberry Pi!"

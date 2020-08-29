@@ -1,0 +1,14 @@
+Source: tallypi
+Maintainer: DeckerEgo <john@deckerego.net>
+Section: python
+Priority: optional
+Build-Depends: python-setuptools (>= 2.6.6-3), debhelper (>= 7.4.3)
+Standards-Version: 3.9.1
+X-Python-Version: >= 2.7
+
+
+
+Package: python-tallypi
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-bottle
+Description: A network controlled tally light for cameras

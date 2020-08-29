@@ -1,0 +1,50 @@
+Building Binary Distributions
+=============================
+
+Distributions are generated using stdeb, execute it on the Raspberry Pi to build for the correct architecture:
+
+    ./package.sh
+
+To debug installation:
+
+    sudo dpkg -D113 -i ../python-tallypi_0.1.0-1_all.deb
+
+To completely uninstall:
+
+    sudo dpkg -P python-tallypi
+
+To verify the files inside the package:
+
+    dpkg -c deb_dist/python-tallypi_0.1.0-1_all.deb
+
+
+Requirements
+============
+
+Requires python-all and debhelper
+
+
+Generating Debian Metadata
+==========================
+
+stdeb generates the debian/ folder automatically & this is version controlled.
+However, if it needs regeneration one can save python-tallypi.postinst to a
+separate directory, delete the debian/ directory, then re-issue:
+
+    python ./setup.py --command-packages=stdeb.command debianize
+
+
+Running Locally
+===============
+
+To test locally:
+
+    export PYTHONPATH="$PYTHONPATH:$HOME/Projects/tally_pi/lib"
+    cd srv/tallypi
+    ../../scripts/run_server.py --config "$HOME/Projects/tally_pi/tests/localsettings.conf"
+
+
+Software License
+================
+
+Review the file LICENSE for details of this software's license and distribution terms.

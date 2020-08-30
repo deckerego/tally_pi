@@ -1,4 +1,4 @@
 #!/bin/sh
 
-export PYTHONPATH="$PYTHONPATH:$HOME/Projects/tally_pi/lib"
-./scripts/run_server.py --config "$HOME/Projects/tally_pi/tests/localsettings.conf"
+export PYTHONPATH="$PYTHONPATH:/home/pi/tally_pi/lib"
+./scripts/run_server.py --config "/home/pi/tally_pi/tests/localsettings.conf"

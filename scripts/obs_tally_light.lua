@@ -1,24 +1,31 @@
 obs = obslua
+http = require("socket.http")
 settings = {}
 
 function script_description()
 	return [[
-Fire off tally lights
+Remote tally lights for camera input sources.
 ]]
 end
 
 function script_properties()
 	local props = obs.obs_properties_create()
 
-	local prop = obs.obs_properties_add_list(props, "source", "Camera", obs.OBS_COMBO_TYPE_EDITABLE, obs.OBS_COMBO_FORMAT_STRING)
+	obs.obs_properties_add_color(props, "idleColor", "Idle Color")
+	obs.obs_properties_add_int_slider(props, "idleBrightness", "Idle Brightness", 0, 10, 1)
+	obs.obs_properties_add_color(props, "previewColor", "Queued Color")
+	obs.obs_properties_add_int_slider(props, "previewBrightness", "Queued Brightness", 0, 10, 1)
+	obs.obs_properties_add_color(props, "programColor", "Live Color")
+	obs.obs_properties_add_int_slider(props, "programBrightness", "Live Brightness", 0, 10, 1)
+
 	local sources = obs.obs_enum_sources()
 	if sources ~= nil then
 		for _, source in ipairs(sources) do
 			source_id = obs.obs_source_get_id(source)
 			if source_id == "av_capture_input" then
 				local source_name = obs.obs_source_get_name(source)
-				obs.script_log(obs.LOG_INFO, "Found source: " .. source_name .. ".")
-				obs.obs_property_list_add_string(prop, source_name, source_name)
+				obs.script_log(obs.LOG_INFO, "Found source: " .. source_name)
+				obs.obs_properties_add_text(props, source_name, source_name .. " light addr:", obs.OBS_TEXT_DEFAULT)
 			end
 		end
 	end
@@ -46,4 +53,7 @@ function handle_scene_change()
 	local scene_name = obs.obs_source_get_name(scene)
 	obs.script_log(obs.LOG_INFO, "Activating " .. scene_name .. ".")
 	obs.obs_source_release(scene);
+
+	b, c, h = http.request("http://192.168.129.135:7413/status")
+	obs.script_log(obs.LOG_INFO, b)
 end

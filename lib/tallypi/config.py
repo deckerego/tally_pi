@@ -6,6 +6,10 @@ class Configuration(object):
     config_values = { }
 
     def __init__(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--config', type=str, default='/etc/hack-clock.conf', help='path to configuration file')
+        args = parser.parse_args()
+
         config_file = open(args.config, 'r')
         self.config_values = json.loads(config_file.read())
 

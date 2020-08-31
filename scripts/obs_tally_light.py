@@ -3,22 +3,22 @@ import urllib.request
 import urllib.error
 
 light_mapping = {}
-idleColor = '#FF0000FF'
+idleColor = int('FF0000FF', 16)
 idleBrightness = 5
-previewColor = '#FF00FF00'
+previewColor = int('FF00FF00', 16)
 previewBrightness = 5
-programColor = '#FFFF0000'
+programColor = int('FFFF0000', 16)
 programBrightness = 5
 
 def script_description():
 	return "Remote tally lights for camera input sources."
 
 def script_defaults(settings):
-	obs.obs_data_set_default_string(settings, "idleColor", "#ff0000ff")
+	obs.obs_data_set_default_int(settings, "idleColor", int('ff0000ff', 16))
 	obs.obs_data_set_default_int(settings, "idleBrightness", 5)
-	obs.obs_data_set_default_string(settings, "previewColor", "#ff00ff00")
+	obs.obs_data_set_default_int(settings, "previewColor", int('ff00ff00', 16))
 	obs.obs_data_set_default_int(settings, "previewBrightness", 5)
-	obs.obs_data_set_default_string(settings, "programColor", "#ffff0000")
+	obs.obs_data_set_default_int(settings, "programColor", int('ffff0000', 16))
 	obs.obs_data_set_default_int(settings, "programBrightness", 5)
 
 def script_update(settings):
@@ -30,11 +30,11 @@ def script_update(settings):
 	global programColor
 	global programBrightness
 
-	idleColor = obs.obs_data_get_string(settings, "idleColor")
+	idleColor = obs.obs_data_get_int(settings, "idleColor")
 	idleBrightness = obs.obs_data_get_int(settings, "idleBrightness")
-	previewColor = obs.obs_data_get_string(settings, "previewColor")
+	previewColor = obs.obs_data_get_int(settings, "previewColor")
 	previewBrightness = obs.obs_data_get_int(settings, "previewBrightness")
-	programColor = obs.obs_data_get_string(settings, "programColor")
+	programColor = obs.obs_data_get_int(settings, "programColor")
 	programBrightness = obs.obs_data_get_int(settings, "programBrightness")
 
 	sources = obs.obs_enum_sources()
@@ -72,9 +72,6 @@ def script_properties():
 
 	return props
 
-def script_update(settings):
-	return
-
 def script_load(settings):
 	obs.obs_frontend_add_event_callback(handle_event)
 
@@ -83,13 +80,19 @@ def handle_event(event):
 		handle_scene_change()
 
 def call_tally_light(source, color, brightness):
-	url = 'http://192.168.129.135:7413/set?color=%s&brightness=%f' % (color[2:7], brightness / 10)
+	addr = light_mapping[source]
+	if not addr:
+		return
+
+	hexColor = hex(color)[10:3:-1]
+	pctBright = brightness / 10
+	url = 'http://%s:7413/set?color=%s&brightness=%f' % (addr, hexColor, pctBright)
 
 	try:
 		with urllib.request.urlopen(url) as response:
 			data = response.read()
 			text = data.decode('utf-8')
-			obs.script_log(obs.LOG_INFO, "Tally light: " + text)
+			obs.script_log(obs.LOG_INFO, 'Set %s tally light: %s' % (source, text))
 
 	except urllib.error.URLError as err:
 		obs.script_log(obs.LOG_WARNING, "Error connecting to tally light URL '" + url + "': " + err.reason)
@@ -100,11 +103,10 @@ def set_tally_light(source, color, brightness) :
 	scene_name = obs.obs_source_get_name(source)
 	scene_items = obs.obs_scene_enum_items(scene)
 	if scene_items is not None:
-		obs.script_log(obs.LOG_INFO, "Finding sources for " + scene_name)
 		for item in scene_items:
 			item_source = obs.obs_sceneitem_get_source(item)
 			item_name = obs.obs_source_get_name(item_source)
-			obs.script_log(obs.LOG_INFO, "Calling Light for Source: " + item_name)
+			obs.script_log(obs.LOG_INFO, 'Calling Light for %s: %s' % (scene_name, item_name))
 			call_tally_light(item_name, color, brightness);
 		obs.sceneitem_list_release(scene_items)
 

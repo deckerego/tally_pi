@@ -98,7 +98,8 @@ def call_tally_light(source, color, brightness):
 		obs.script_log(obs.LOG_WARNING, "Error connecting to tally light URL '" + url + "': " + err.reason)
 		obs.remove_current_callback()
 
-def set_tally_light(source, color, brightness) :
+def set_scene_light(source, color, brightness) :
+	item_names = []
 	scene = obs.obs_scene_from_source(source)
 	scene_name = obs.obs_source_get_name(source)
 	scene_items = obs.obs_scene_enum_items(scene)
@@ -106,15 +107,24 @@ def set_tally_light(source, color, brightness) :
 		for item in scene_items:
 			item_source = obs.obs_sceneitem_get_source(item)
 			item_name = obs.obs_source_get_name(item_source)
+			item_names.append(item_name)
 			obs.script_log(obs.LOG_INFO, 'Calling Light for %s: %s' % (scene_name, item_name))
 			call_tally_light(item_name, color, brightness);
 		obs.sceneitem_list_release(scene_items)
 
+	return item_names
+
 def handle_scene_change():
+	done_items = []
+
 	preview_source = obs.obs_frontend_get_current_preview_scene()
-	set_tally_light(preview_source, previewColor, previewBrightness)
+	done_items += set_scene_light(preview_source, previewColor, previewBrightness)
 	obs.obs_source_release(preview_source);
 
 	program_source = obs.obs_frontend_get_current_scene()
-	set_tally_light(program_source, programColor, programBrightness)
+	done_items += set_scene_light(program_source, programColor, programBrightness)
 	obs.obs_source_release(program_source);
+
+	for src, addr in light_mapping.items():
+		if src not in done_items:
+			call_tally_light(src, idleColor, idleBrightness);

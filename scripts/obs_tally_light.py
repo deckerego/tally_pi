@@ -10,30 +10,15 @@ previewBrightness = 5
 programColor = '#FFFF0000'
 programBrightness = 5
 
-def call_tally_light():
-	color = previewColor[2:7]
-	url = 'http://192.168.129.135:7413/set?color=%s' % (color)
-
-	try:
-		with urllib.request.urlopen(url) as response:
-			data = response.read()
-			text = data.decode('utf-8')
-			obs.script_log(obs.LOG_INFO, "Tally light: " + text)
-
-	except urllib.error.URLError as err:
-		obs.script_log(obs.LOG_WARNING, "Error connecting to tally light URL '" + url + "': " + err.reason)
-		obs.remove_current_callback()
-
-
 def script_description():
 	return "Remote tally lights for camera input sources."
 
 def script_defaults(settings):
-	obs.obs_data_set_default_string(settings, "idleColor", "#FF0000FF")
+	obs.obs_data_set_default_string(settings, "idleColor", "#ff0000ff")
 	obs.obs_data_set_default_int(settings, "idleBrightness", 5)
-	obs.obs_data_set_default_string(settings, "previewColor", "#FF00FF00")
+	obs.obs_data_set_default_string(settings, "previewColor", "#ff00ff00")
 	obs.obs_data_set_default_int(settings, "previewBrightness", 5)
-	obs.obs_data_set_default_string(settings, "programColor", "#FFFF0000")
+	obs.obs_data_set_default_string(settings, "programColor", "#ffff0000")
 	obs.obs_data_set_default_int(settings, "programBrightness", 5)
 
 def script_update(settings):
@@ -97,9 +82,37 @@ def handle_event(event):
 	if event is obs.OBS_FRONTEND_EVENT_SCENE_CHANGED:
 		handle_scene_change()
 
+def call_tally_light(source, color, brightness):
+	url = 'http://192.168.129.135:7413/set?color=%s&brightness=%f' % (color[2:7], brightness / 10)
+
+	try:
+		with urllib.request.urlopen(url) as response:
+			data = response.read()
+			text = data.decode('utf-8')
+			obs.script_log(obs.LOG_INFO, "Tally light: " + text)
+
+	except urllib.error.URLError as err:
+		obs.script_log(obs.LOG_WARNING, "Error connecting to tally light URL '" + url + "': " + err.reason)
+		obs.remove_current_callback()
+
+def set_tally_light(source, color, brightness) :
+	scene = obs.obs_scene_from_source(source)
+	scene_name = obs.obs_source_get_name(source)
+	scene_items = obs.obs_scene_enum_items(scene)
+	if scene_items is not None:
+		obs.script_log(obs.LOG_INFO, "Finding sources for " + scene_name)
+		for item in scene_items:
+			item_source = obs.obs_sceneitem_get_source(item)
+			item_name = obs.obs_source_get_name(item_source)
+			obs.script_log(obs.LOG_INFO, "Calling Light for Source: " + item_name)
+			call_tally_light(item_name, color, brightness);
+		obs.sceneitem_list_release(scene_items)
+
 def handle_scene_change():
-	scene = obs.obs_frontend_get_current_scene()
-	scene_name = obs.obs_source_get_name(scene)
-	obs.script_log(obs.LOG_INFO, "Activating " + scene_name)
-	obs.obs_source_release(scene);
-	call_tally_light();
+	preview_source = obs.obs_frontend_get_current_preview_scene()
+	set_tally_light(preview_source, previewColor, previewBrightness)
+	obs.obs_source_release(preview_source);
+
+	program_source = obs.obs_frontend_get_current_scene()
+	set_tally_light(program_source, programColor, programBrightness)
+	obs.obs_source_release(program_source);

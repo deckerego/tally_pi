@@ -10,8 +10,12 @@ preview_color = int('FF00FF00', 16)
 preview_brightness = 5
 preview_items = []
 program_color = int('FFFF0000', 16)
-program_crightness = 5
+program_brightness = 5
 program_items = []
+
+def settings_dict(settings):
+	settings_json = obs.obs_data_get_json(settings)
+	return json.loads(settings_json)
 
 def script_description():
 	return "Remote tally lights for camera input sources."
@@ -33,15 +37,7 @@ def script_update(settings):
 	global program_color
 	global program_brightness
 
-	# I owe you, the reader, an explanation here.
-	# So, the frontend isn't loaded when the script loads, and so I can't
-	# iterate through the scenes to list sources. I also need to map the
-	# source name to an IP address, which the default obs_data doesn't have
-	# a great way to do. So instead I dump out the entirety of the settings
-	# object into JSON, transform that into a map, and then search for
-	# something other than a color/value setting. It's ugly, open to ideas.
-	settings_json = obs.obs_data_get_json(settings)
-	settings_map = json.loads(settings_json)
+	settings_map = settings_dict(settings)
 	for k, v in settings_map.items():
 		if k[0:6] != "tally^":
 			light_mapping[k] = v

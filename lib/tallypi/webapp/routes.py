@@ -18,19 +18,26 @@ from light import Light
 application = Bottle()
 light = Light()
 
+def _to_json(r, g, b, bright):
+    return '{ "red": %i, "green": %i, "blue": %i, "brightness": %f }' % (r, g, b, bright)
+
 @application.get('/status')
 def light_status():
     red, green, blue = light.getColor()
-    return '{ "red": %i, "green": %i, "blue": %i }' % (red, green, blue)
+    brightness = light.getBrightness()
+    return _to_json(red, green, blue, brightness)
 
 @application.get('/set')
 def light_set():
-    colorHex = request.query.color
-    redInt = int(colorHex[0:2], 16)
-    greenInt = int(colorHex[2:4], 16)
-    blueInt = int(colorHex[4:6], 16)
+    color_hex = request.query.color
+    bright_pct = request.query.brightness
 
-    light.setBrightness(0.5)
-    light.goToColor(redInt, greenInt, blueInt)
+    red = int(color_hex[0:2], 16)
+    green = int(color_hex[2:4], 16)
+    blue = int(color_hex[4:6], 16)
+    brightness = float(bright_pct or 0.5)
 
-    return '{ "red": %i, "green": %i, "blue": %i }' % (redInt, greenInt, blueInt)
+    light.setBrightness(brightness)
+    light.goToColor(red, green, blue)
+
+    return _to_json(red, green, blue, brightness)

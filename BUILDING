@@ -3,7 +3,7 @@ Building Binary Distributions
 
 Distributions are generated using stdeb, execute it on the Raspberry Pi to build for the correct architecture:
 
-    ./package.sh
+    python setup.py --command-packages=stdeb.command bdist_deb
 
 To debug installation:
 
@@ -21,7 +21,7 @@ To verify the files inside the package:
 Requirements
 ============
 
-Requires python-all and debhelper
+Requires python-stdeb and debhelper
 
 
 Generating Debian Metadata

@@ -11,7 +11,6 @@
 
 DESC="A network controlled tally light for cameras"
 NAME='tallypi'
-WEB_DIR='/srv/tallypi'
 DAEMON='/usr/bin/run_server.py'
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
@@ -35,9 +34,9 @@ SCRIPTNAME=/etc/init.d/$NAME
 #
 do_start()
 {
-  start-stop-daemon --start --quiet --chdir $WEB_DIR --make-pidfile --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
+  start-stop-daemon --start --quiet --make-pidfile --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
     || return 1
-  start-stop-daemon --background --start --quiet --chdir $WEB_DIR --make-pidfile --pidfile $PIDFILE --exec $DAEMON -- \
+  start-stop-daemon --background --start --quiet --make-pidfile --pidfile $PIDFILE --exec $DAEMON -- \
     $DAEMON_ARGS \
     || return 2
 }
@@ -49,10 +48,10 @@ do_stop()
 {
   gpio_destroy
 
-  start-stop-daemon --stop --quiet --chdir $WEB_DIR --retry=INT/30/KILL/5 --remove-pidfile --pidfile $PIDFILE
+  start-stop-daemon --stop --quiet --retry=INT/30/KILL/5 --remove-pidfile --pidfile $PIDFILE
   RETVAL="$?"
   [ "$RETVAL" = 2 ] && return 2
-  start-stop-daemon --stop --quiet --oknodo --chdir $WEB_DIR --retry=0/30/KILL/5 --exec $DAEMON
+  start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
   [ "$?" = 2 ] && return 2
   # Many daemons don't delete their pidfiles when they exit.
   rm -f $PIDFILE
@@ -64,7 +63,7 @@ do_stop()
 #
 do_reload()
 {
-  start-stop-daemon --stop --signal 1 --quiet --chdir $WEB_DIR --pidfile $PIDFILE --name $NAME
+  start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name $NAME
   return 0
 }
 

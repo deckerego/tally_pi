@@ -20,13 +20,11 @@ base_data_files = [
     ('/etc',    ['etc/tallypi.conf']),
     ('/etc/init.d',    ['etc/init.d/tallypi']),
     ('/etc/default',    ['etc/default/tallypi']),
-    ('/usr/share/doc/tallypi', ['README.md', 'LICENSE', 'MANIFEST', 'requirements.txt'])
+    ('/usr/share/doc/tallypi', ['README.md', 'LICENSE'])
 ]
 
-webapp_data_files = all_files('/srv/tallypi', 'srv/tallypi')
-
 setup(
-    name='Tally Pi',
+    name='tallypi',
     version='0.1.0',
     description='A network controlled tally light for video cameras',
     author='DeckerEgo',
@@ -40,7 +38,7 @@ setup(
     package_dir={
         '': 'lib'
     },
-    data_files=(base_data_files + webapp_data_files),
+    data_files=(base_data_files),
     scripts=[
         'scripts/run_server.py'
     ],

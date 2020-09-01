@@ -5,9 +5,6 @@ class Light():
     def __init__(self):
         uh.set_layout(uh.PHAT)
 
-    def setBrightness(self, percent):
-        uh.brightness(percent)
-
     def validateColor(self, intensity):
         if intensity < 0:
             return 0
@@ -16,25 +13,44 @@ class Light():
         else:
             return intensity
 
+    def validateBrightness(self, intensity):
+        if intensity < 0.0:
+            return 0.0
+        if intensity > 0.0 and intensity < 0.2:
+            return 0.2
+        elif intensity > 1.0:
+            return 1.0
+        else:
+            return intensity
+
     def setColor(self, red, green, blue):
-        for x in range(8):
-            for y in range(4):
-                uh.set_pixel(x, y, self.validateColor(red), self.validateColor(green), self.validateColor(blue))
+        uh.set_all(red, green, blue)
         uh.show()
 
     def getColor(self):
         return uh.get_pixel(0, 0)
 
-    def goToColor(self, r, g, b, steps=8, wait=0.05):
-        rSrc, gSrc, bSrc = self.getColor()
-        rStep = (r - rSrc) / steps
-        gStep = (g - gSrc) / steps
-        bStep = (b - bSrc) / steps
+    def setBrightness(self, percent):
+        brightness = self.validateBrightness(percent)
+        uh.brightness(brightness)
 
-        while steps > 0:
+    def getBrightness(self):
+        return uh.get_brightness()
+
+    def goToColor(self, r, g, b, steps=4, wait=0.05):
+        red = self.validateColor(r)
+        green = self.validateColor(g)
+        blue = self.validateColor(b)
+
+        rSrc, gSrc, bSrc = self.getColor()
+        rStep = (red - rSrc) / steps
+        gStep = (green - gSrc) / steps
+        bStep = (blue - bSrc) / steps
+
+        while steps > 1:
             rSrc, gSrc, bSrc = self.getColor()
             self.setColor(rSrc + rStep, gSrc + gStep, bSrc + bStep)
             steps -= 1
             time.sleep(wait)
 
-        self.setColor(r, g, b)
+        self.setColor(red, green, blue)

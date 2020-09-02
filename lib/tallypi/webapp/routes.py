@@ -14,9 +14,11 @@ logger.addHandler(console)
 from tallypi.config import configuration
 from bottle import Bottle, get, request
 from light import Light
+from powerswitch import PowerSwitch
 
 application = Bottle()
 light = Light()
+power_switch = PowerSwitch()
 
 def _to_json(r, g, b, bright):
     return '{ "red": %i, "green": %i, "blue": %i, "brightness": %f }' % (r, g, b, bright)

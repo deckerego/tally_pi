@@ -34,9 +34,9 @@ SCRIPTNAME=/etc/init.d/$NAME
 #
 do_start()
 {
-  start-stop-daemon --start --quiet --make-pidfile --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
+  start-stop-daemon --start --quiet --make-pidfile --pidfile $PIDFILE --startas $DAEMON --test > /dev/null \
     || return 1
-  start-stop-daemon --background --start --quiet --make-pidfile --pidfile $PIDFILE --exec $DAEMON -- \
+  start-stop-daemon --background --start --quiet --make-pidfile --pidfile $PIDFILE --startas $DAEMON -- \
     $DAEMON_ARGS \
     || return 2
 }
@@ -51,7 +51,7 @@ do_stop()
   start-stop-daemon --stop --quiet --retry=INT/30/KILL/5 --remove-pidfile --pidfile $PIDFILE
   RETVAL="$?"
   [ "$RETVAL" = 2 ] && return 2
-  start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
+  start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --startas $DAEMON
   [ "$?" = 2 ] && return 2
   # Many daemons don't delete their pidfiles when they exit.
   rm -f $PIDFILE

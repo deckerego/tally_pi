@@ -38,6 +38,9 @@ class Light():
         return uh.get_brightness()
 
     def goToColor(self, r, g, b, steps=4, wait=0.05):
+        if not steps:
+            steps = 1
+
         red = self.validateColor(r)
         green = self.validateColor(g)
         blue = self.validateColor(b)
@@ -54,3 +57,16 @@ class Light():
             time.sleep(wait)
 
         self.setColor(red, green, blue)
+
+    def test(self):
+        self.setBrightness(0.5)
+        self.goToColor(255, 0, 0, 10, 0.1)
+        self.goToColor(0, 255, 0, 10, 0.1)
+        self.goToColor(0, 0, 255, 10, 0.1)
+        self.goToColor(255, 0, 0, 10, 0.1)
+        self.goToColor(255, 255, 255, 1, 0.01)
+        self.shutdown()
+
+    def shutdown(self):
+        self.goToColor(0, 0, 0)
+        self.setBrightness(0.0)

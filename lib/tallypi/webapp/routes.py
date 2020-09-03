@@ -17,8 +17,12 @@ from light import Light
 from powerswitch import PowerSwitch
 
 application = Bottle()
+
 light = Light()
+light.test()
+
 power_switch = PowerSwitch()
+power_switch.add_callback(light.shutdown)
 
 def _to_json(r, g, b, bright):
     return '{ "red": %i, "green": %i, "blue": %i, "brightness": %f }' % (r, g, b, bright)

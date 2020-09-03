@@ -5,6 +5,6 @@ Creative Commons - Attribution license. By downloading this thing,
 you agree to abide by this license.
 
 Modifications include changing the enclosure dimensions to cover the entire Pi,
-removing HDMI, USB, microSD, and pin header slots, removing the mounting
+removing HDMI, USB, microSD, and pin header slots, reducing the mounting
 screw holes, and adding a camera flash mount. Modifications are provided in
 Blender format, adapted from the STL versions.

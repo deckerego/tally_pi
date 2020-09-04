@@ -12,29 +12,30 @@ console.setLevel(logging.WARNING)
 logger.addHandler(console)
 
 from tallypi.config import configuration
-from bottle import Bottle, get, request
+from bottle import Bottle, route, request, response
 from light import Light
 from powerswitch import PowerSwitch
 
-application = Bottle()
-
-light = Light()
-light.test()
-
+pHat = Light()
 power_switch = PowerSwitch()
-power_switch.add_callback(light.shutdown)
+power_switch.add_callback(pHat.shutdown)
+
+application = Bottle()
+application.install(pHat)
 
 def _to_json(r, g, b, bright):
     return '{ "red": %i, "green": %i, "blue": %i, "brightness": %f }' % (r, g, b, bright)
 
-@application.get('/status')
-def light_status():
+@application.route('/status')
+def light_status(light):
     red, green, blue = light.getColor()
     brightness = light.getBrightness()
+
+    response.content_type = 'application/json'
     return _to_json(red, green, blue, brightness)
 
-@application.get('/set')
-def light_set():
+@application.route('/set')
+def light_set(light):
     color_hex = request.query.color
     bright_pct = request.query.brightness
 
@@ -46,4 +47,5 @@ def light_set():
     light.setBrightness(brightness)
     light.goToColor(red, green, blue)
 
+    response.content_type = 'application/json'
     return _to_json(red, green, blue, brightness)

@@ -103,7 +103,7 @@ def call_tally_light(source, color, brightness):
 		obs.script_log(obs.LOG_WARNING, 'Error connecting to tally light URL %s: %s' + (url, err.reason))
 		obs.remove_current_callback()
 
-def set_scene_light(source, color, brightness, excluded_items=[]) :
+def set_scene_light(source, color, brightness) :
 	item_names = []
 	scene = obs.obs_scene_from_source(source)
 	scene_name = obs.obs_source_get_name(source)
@@ -112,7 +112,7 @@ def set_scene_light(source, color, brightness, excluded_items=[]) :
 		for item in scene_items:
 			item_source = obs.obs_sceneitem_get_source(item)
 			item_name = obs.obs_source_get_name(item_source)
-			if item_name not in excluded_items and item_name in light_mapping:
+			if item_name in light_mapping:
 				item_names.append(item_name)
 				obs.script_log(obs.LOG_INFO, 'Calling Light for [%s]: [%s]' % (scene_name, item_name))
 				call_tally_light(item_name, color, brightness);
@@ -131,7 +131,7 @@ def handle_preview_change():
 	global preview_items
 
 	preview_source = obs.obs_frontend_get_current_preview_scene()
-	preview_items = set_scene_light(preview_source, preview_color, preview_brightness, program_items)
+	preview_items = set_scene_light(preview_source, preview_color, preview_brightness)
 	obs.obs_source_release(preview_source);
 	set_idle_lights()
 

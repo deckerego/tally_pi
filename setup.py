@@ -51,5 +51,7 @@ setup(
     ],
     keywords='tally light obs raspberry pi rpi cameras video recording',
     requires=[
+        'bottle (>=0.12.15)',
+        'paste (>=3.0.6)'
     ],
 )

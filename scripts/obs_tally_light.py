@@ -12,6 +12,7 @@ preview_items = []
 program_color = int('FFFF0000', 16)
 program_brightness = 5
 program_items = []
+http_timeout_seconds = 4
 
 def settings_dict(settings):
 	settings_json = obs.obs_data_get_json(settings)
@@ -87,6 +88,7 @@ def handle_event(event):
 def call_tally_light(source, color, brightness):
 	addr = light_mapping[source]
 	if not addr:
+		obs.script_log(obs.LOG_INFO, 'No tally light set for: %s' % (source))
 		return
 
 	hexColor = hex(color)[10:3:-1]
@@ -94,7 +96,7 @@ def call_tally_light(source, color, brightness):
 	url = 'http://%s:7413/set?color=%s&brightness=%f' % (addr, hexColor, pctBright)
 
 	try:
-		with urllib.request.urlopen(url) as response:
+		with urllib.request.urlopen(url, http_timeout_seconds) as response:
 			data = response.read()
 			text = data.decode('utf-8')
 			obs.script_log(obs.LOG_INFO, 'Set %s tally light: %s' % (source, text))

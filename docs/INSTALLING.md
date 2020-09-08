@@ -16,13 +16,14 @@ If you have loaded the stock
 can set up wireless access for your Pi before it even boots. When you insert
 the SD card into your main Windows/Linux/MacOS computer. You should see two
 partitions or disk mounts appear - one of them will be labelled "BOOT":
+
 ![Mounting the boot partition](./images/boot_part.png)
 
 Within this boot partition we need to create a file named "wpa_supplicant.conf".
 Use a text editor (like Notepad or TextEdit or vim) to create a new
 wpa_supplicant.conf on this partition of the SD card. You can generate the
 contents of this file by using Steve Edson's fantastic Config Generator,
-or by modifying this sample [./wpa_supplicant.conf](wpa_supplicant.conf).
+or by modifying this sample [wpa_supplicant.conf](./wpa_supplicant.conf).
 
 Finally, create an empty file in the same mount point simply named "ssh" -
 nothing needs to be inside the file. When the Raspberry Pi starts up,
@@ -112,3 +113,32 @@ Once the software is installed, you can enable it with:
     sudo systemctl enable tallypi
 
 Then reboot your Pi for everything to kick off!
+
+
+## Testing the TallyPi Service
+
+If you know the hostname of your Raspberry Pi, open up a web browser and
+see if you can load the status URL to test it out. For example, if your
+Pi is named `raspberrypi`, try loading the following:
+
+    http://raspberrypi:7413/status
+
+It should reply back with:
+
+    { "red": 0, "green": 0, "blue": 0, "brightness": 0.0 }
+
+You can try turning your LEDs blue with:
+
+    http://raspberrypi:7413/set?color=0000FF&brightness=0.5
+
+This should turn your LEDs blue at 50% brightness.
+
+If you do not know what your Pi's hostname or IP address is, you can use the
+[find_lights.sh](../scripts/find_lights.sh) shell script to search your network
+for any available TallyPi lights. If your wireless network is on the subnet
+192.168.1.1/24, you could search by downloading the script and running:
+
+    find_lights.sh 192.168.1
+
+The script will then crawl across your network, looking for an
+open 7413 port.

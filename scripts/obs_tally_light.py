@@ -96,13 +96,13 @@ def call_tally_light(source, color, brightness):
 	url = 'http://%s:7413/set?color=%s&brightness=%f' % (addr, hexColor, pctBright)
 
 	try:
-		with urllib.request.urlopen(url, http_timeout_seconds) as response:
+		with urllib.request.urlopen(url, None, http_timeout_seconds) as response:
 			data = response.read()
 			text = data.decode('utf-8')
 			obs.script_log(obs.LOG_INFO, 'Set %s tally light: %s' % (source, text))
 
 	except urllib.error.URLError as err:
-		obs.script_log(obs.LOG_WARNING, 'Error connecting to tally light URL %s: %s' + (url, err.reason))
+		obs.script_log(obs.LOG_WARNING, 'Error connecting to tally light URL %s: %s' % (url, err.reason))
 		obs.remove_current_callback()
 
 def set_scene_light(source, color, brightness) :

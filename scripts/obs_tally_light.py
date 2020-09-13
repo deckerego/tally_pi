@@ -78,7 +78,7 @@ def script_load(settings):
 
 def handle_event(event):
 	if event is obs.OBS_FRONTEND_EVENT_SCENE_CHANGED:
-		handle_scene_change()
+		handle_program_change()
 	elif event is obs.OBS_FRONTEND_EVENT_PREVIEW_SCENE_CHANGED:
 		handle_preview_change()
 	elif event is obs.OBS_FRONTEND_EVENT_EXIT:
@@ -105,7 +105,7 @@ def call_tally_light(source, color, brightness):
 		obs.script_log(obs.LOG_WARNING, 'Error connecting to tally light URL %s: %s' % (url, err.reason))
 		obs.remove_current_callback()
 
-def set_scene_light(source, color, brightness) :
+def get_item_names_by_scene(source):
 	item_names = []
 	scene = obs.obs_scene_from_source(source)
 	scene_name = obs.obs_source_get_name(source)
@@ -116,11 +116,14 @@ def set_scene_light(source, color, brightness) :
 			item_name = obs.obs_source_get_name(item_source)
 			if item_name in light_mapping:
 				item_names.append(item_name)
-				obs.script_log(obs.LOG_INFO, 'Calling Light for [%s]: [%s]' % (scene_name, item_name))
-				call_tally_light(item_name, color, brightness);
 		obs.sceneitem_list_release(scene_items)
 
 	return item_names
+
+def set_lights_by_items(item_names, color, brightness):
+	for item_name in item_names:
+		obs.script_log(obs.LOG_INFO, 'Calling Light for [%s]' % (item_name))
+		call_tally_light(item_name, color, brightness);
 
 def set_idle_lights():
 	excluded_items = program_items + preview_items
@@ -132,16 +135,26 @@ def set_idle_lights():
 def handle_preview_change():
 	global preview_items
 
+	program_source = obs.obs_frontend_get_current_scene()
+	program_name = obs.obs_source_get_name(program_source)
+	obs.obs_source_release(program_source);
+
 	preview_source = obs.obs_frontend_get_current_preview_scene()
-	preview_items = set_scene_light(preview_source, preview_color, preview_brightness)
+	preview_name = obs.obs_source_get_name(preview_source)
+
+	preview_items = get_item_names_by_scene(preview_source)
+	if program_name != preview_name:
+		set_lights_by_items(preview_items, preview_color, preview_brightness)
+
 	obs.obs_source_release(preview_source);
 	set_idle_lights()
 
-def handle_scene_change():
+def handle_program_change():
 	global program_items
 
 	program_source = obs.obs_frontend_get_current_scene()
-	program_items = set_scene_light(program_source, program_color, program_brightness)
+	program_items = get_item_names_by_scene(program_source)
+	set_lights_by_items(program_items, program_color, program_brightness)
 	obs.obs_source_release(program_source);
 	set_idle_lights()
 

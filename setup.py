@@ -25,7 +25,7 @@ base_data_files = [
 
 setup(
     name='tallypi',
-    version='0.3.1',
+    version='0.3.2',
     description='A network controlled tally light for video cameras',
     author='DeckerEgo',
     author_email='john@deckerego.net',
@@ -45,7 +45,7 @@ setup(
     classifiers=[
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
         "Programming Language :: Python",
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: End Users/Desktop",
         "Topic :: Multimedia :: Sound/Audio :: Capture/Recording"
     ],

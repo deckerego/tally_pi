@@ -40,7 +40,6 @@ function script_update(settings)
 end
 
 function load_input_settings(settings)
-	obs.script_log(obs.LOG_INFO, "Loading INput Settings")
 	local sources = obs.obs_enum_sources()
 	if sources ~= nil then
 		for _, source in ipairs(sources) do
@@ -109,7 +108,10 @@ function call_tally_light(source, color, brightness)
 	local pctBright = brightness / 10
 	local url = "http://" .. addr .. ":7413/set?color=" .. hexColor .. "&brightness=" .. pctBright
 
-	obs.script_log(obs.LOG_INFO, "CALLING " .. url)
+	local status = os.execute("curl --connect-timeout 2 --max-time 4 '" .. url .. "'" )
+	if status > 0 then
+		obs.script_log(obs.LOG_ERROR, "Error connecting to: " .. url)
+	end
 end
 
 function get_item_names_by_scene(source)

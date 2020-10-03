@@ -90,7 +90,7 @@ function handle_event(event)
 	elseif event == obs.OBS_FRONTEND_FINISHED_LOADING then
 		handle_loaded()
 	elseif event == obs.OBS_FRONTEND_EVENT_SCENE_CHANGED then
-		if(table.getn(light_mapping) <= 0) then load_input_settings(settings_cache) end
+		if next(light_mapping) == nil then load_input_settings(settings_cache) end
 		handle_program_change()
 	elseif event == obs.OBS_FRONTEND_EVENT_PREVIEW_SCENE_CHANGED then
 		handle_preview_change()
@@ -99,8 +99,8 @@ end
 
 function call_tally_light(source, color, brightness)
 	local addr = light_mapping[source]
-	if addr == nil then
-		obs.script_log(obs.LOG_INFO, "No tally light set for: %s" .. source)
+	if (addr == nil) or (string.len(addr) <= 0) then
+		obs.script_log(obs.LOG_INFO, "No tally light set for: " .. source)
 		do return end
 	end
 
@@ -134,14 +134,13 @@ end
 
 function set_lights_by_items(item_names, color, brightness)
 	for _, item_name in pairs(item_names) do
-		obs.script_log(obs.LOG_INFO, "Calling Light for: " .. item_name)
 		call_tally_light(item_name, color, brightness)
 	end
 end
 
 function set_idle_lights()
 	for src, addr in pairs(light_mapping) do
-		if (program_items[src] == null) and (preview_items[src] == null) then
+		if (program_items[src] == nil) and (preview_items[src] == nil) then
 			call_tally_light(src, idle_color, idle_brightness)
 		end
 	end

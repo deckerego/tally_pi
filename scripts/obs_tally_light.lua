@@ -1,5 +1,4 @@
 obs = obslua
-settings = {}
 light_mapping = {}
 idle_color = tonumber('FF0000FF', 16)
 idle_brightness = 5
@@ -95,7 +94,7 @@ function call_tally_light(source, color, brightness)
 		do return end
 	end
 
-	local hexColor = string.format("%x", color)
+	local hexColor = string.sub(string.format("%x", color), 3)
 	local pctBright = brightness / 10
 	local url = "http://" .. addr .. ":7413/set?color=" .. hexColor .. "&brightness=" .. pctBright
 
@@ -112,13 +111,11 @@ function get_item_names_by_scene(source)
 		local item_source = obs.obs_sceneitem_get_source(item)
 		local item_name = obs.obs_source_get_name(item_source)
 		if light_mapping[item_name] ~= nil then
-			obs.script_log(obs.LOG_INFO, "Scene Item: " .. item_name)
-			table.insert(item_names, item_name)
+			item_names[item_name] = item_name
 		end
 	end
 
 	obs.sceneitem_list_release(scene_items)
-
 	return item_names
 end
 
@@ -131,7 +128,7 @@ end
 
 function set_idle_lights()
 	for src, addr in pairs(light_mapping) do
-		if program_items[src] == null and preview_items[src] == null then
+		if (program_items[src] == null) and (preview_items[src] == null) then
 			call_tally_light(src, idle_color, idle_brightness)
 		end
 	end
@@ -145,7 +142,7 @@ function handle_preview_change()
 	local preview_source = obs.obs_frontend_get_current_preview_scene()
 	local preview_name = obs.obs_source_get_name(preview_source)
 
-	local preview_items = get_item_names_by_scene(preview_source)
+	preview_items = get_item_names_by_scene(preview_source)
 	if program_name ~= preview_name then
 		set_lights_by_items(preview_items, preview_color, preview_brightness)
 	end
@@ -156,7 +153,7 @@ end
 
 function handle_program_change()
 	local program_source = obs.obs_frontend_get_current_scene()
-	local program_items = get_item_names_by_scene(program_source)
+	program_items = get_item_names_by_scene(program_source)
 	set_lights_by_items(program_items, program_color, program_brightness)
 	obs.obs_source_release(program_source)
 	set_idle_lights()

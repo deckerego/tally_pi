@@ -14,12 +14,12 @@ program_brightness = 5
 program_items = []
 http_timeout_seconds = 4
 
+def script_description():
+	return "Remote tally lights for camera input sources."
+
 def settings_dict(settings):
 	settings_json = obs.obs_data_get_json(settings)
 	return json.loads(settings_json)
-
-def script_description():
-	return "Remote tally lights for camera input sources."
 
 def script_defaults(settings):
 	obs.obs_data_set_default_int(settings, "tally^IdleColor", int('ffff0000', 16))

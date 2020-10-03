@@ -1,4 +1,5 @@
 obs = obslua
+settings_cache = {}
 light_mapping = {}
 idle_color = tonumber('FF0000FF', 16)
 idle_brightness = 5
@@ -33,6 +34,13 @@ function script_update(settings)
 	program_color = obs.obs_data_get_int(settings, "ProgramColor")
 	program_brightness = obs.obs_data_get_int(settings, "ProgramBrightness")
 
+	load_input_settings(settings)
+
+	settings_cache = settings
+end
+
+function load_input_settings(settings)
+	obs.script_log(obs.LOG_INFO, "Loading INput Settings")
 	local sources = obs.obs_enum_sources()
 	if sources ~= nil then
 		for _, source in ipairs(sources) do
@@ -78,12 +86,15 @@ function script_load(settings)
 end
 
 function handle_event(event)
-	if event == obs.OBS_FRONTEND_EVENT_SCENE_CHANGED then
+	if event == obs.OBS_FRONTEND_EVENT_EXIT then
+		handle_exit()
+	elseif event == obs.OBS_FRONTEND_FINISHED_LOADING then
+		handle_loaded()
+	elseif event == obs.OBS_FRONTEND_EVENT_SCENE_CHANGED then
+		if(table.getn(light_mapping) <= 0) then load_input_settings(settings_cache) end
 		handle_program_change()
 	elseif event == obs.OBS_FRONTEND_EVENT_PREVIEW_SCENE_CHANGED then
 		handle_preview_change()
-	elseif event == obs.OBS_FRONTEND_EVENT_EXIT then
-		handle_exit()
 	end
 end
 
@@ -147,7 +158,7 @@ function handle_preview_change()
 		set_lights_by_items(preview_items, preview_color, preview_brightness)
 	end
 
-	obs.obs_source_release(preview_source);
+	obs.obs_source_release(preview_source)
 	set_idle_lights()
 end
 
@@ -159,8 +170,12 @@ function handle_program_change()
 	set_idle_lights()
 end
 
+function handle_loaded()
+	load_input_settings(settings_cache)
+end
+
 function handle_exit()
 	for src, addr in pairs(light_mapping.items) do
-		call_tally_light(src, "00000000", 0);
+		call_tally_light(src, "00000000", 0)
 	end
 end

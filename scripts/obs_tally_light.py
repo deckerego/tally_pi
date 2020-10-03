@@ -137,7 +137,7 @@ def handle_preview_change():
 
 	program_source = obs.obs_frontend_get_current_scene()
 	program_name = obs.obs_source_get_name(program_source)
-	obs.obs_source_release(program_source);
+	obs.obs_source_release(program_source)
 
 	preview_source = obs.obs_frontend_get_current_preview_scene()
 	preview_name = obs.obs_source_get_name(preview_source)
@@ -160,4 +160,4 @@ def handle_program_change():
 
 def handle_exit():
 	for src, addr in light_mapping.items():
-		call_tally_light(src, "00000000", 0);
+		call_tally_light(src, "00000000", 0)

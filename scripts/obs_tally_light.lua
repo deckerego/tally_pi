@@ -107,8 +107,8 @@ function get_item_names_by_scene(source)
 	local scene_items = obs.obs_scene_enum_items(scene)
 
 	if scene_items ~= nil then
-		for item in scene_items do
-			local item_source = obs.obs_sceneitem_get_source(item)
+		for _, scene_item in ipairs(scene_items) do
+			local item_source = obs.obs_sceneitem_get_source(scene_item)
 			local item_name = obs.obs_source_get_name(item_source)
 			if light_mapping[item_name] ~= nil then
 				table.insert(item_names, item_name)
@@ -121,14 +121,14 @@ function get_item_names_by_scene(source)
 end
 
 function set_lights_by_items(item_names, color, brightness)
-	for item_name in item_names do
+	for _, item_name in ipairs(item_names) do
 		obs.script_log(obs.LOG_INFO, "Calling Light for [%s]" .. item_name)
 		call_tally_light(item_name, color, brightness)
 	end
 end
 
 function set_idle_lights()
-	local excluded_items = program_items + preview_items
+	local excluded_items = table.insert(program_items, preview_items)
 
 	for src, addr in ipairs(light_mapping) do
 		if excluded_items[src] == null then

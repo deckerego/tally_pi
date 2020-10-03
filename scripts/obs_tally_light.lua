@@ -17,52 +17,22 @@ Remote tally lights for camera input sources.
 ]]
 end
 
-function settings_table(settings)
-	local settings_table = {}
-	for item = obs.obs_data_first(settings), obs.obs_data_item_next(item) do
-		local name = obs.obs_data_item_get_name(item)
-		local value = obs.obs_data_item_get_string(item)
-		settings_table[name] = value
-	end
-
-	return settings_table
-end
-
 function script_defaults(settings)
-	obs.obs_data_set_default_int(settings, "tally^IdleColor", tonumber('ffff0000', 16))
-	obs.obs_data_set_default_int(settings, "tally^IdleBrightness", 5)
-	obs.obs_data_set_default_int(settings, "tally^PreviewColor", tonumber('ff00ff00', 16))
-	obs.obs_data_set_default_int(settings, "tally^PreviewBrightness", 5)
-	obs.obs_data_set_default_int(settings, "tally^ProgramColor", tonumber('ff0000ff', 16))
-	obs.obs_data_set_default_int(settings, "tally^ProgramBrightness", 5)
+	obs.obs_data_set_default_int(settings, "IdleColor", tonumber('ffff0000', 16))
+	obs.obs_data_set_default_int(settings, "IdleBrightness", 5)
+	obs.obs_data_set_default_int(settings, "PreviewColor", tonumber('ff00ff00', 16))
+	obs.obs_data_set_default_int(settings, "PreviewBrightness", 5)
+	obs.obs_data_set_default_int(settings, "ProgramColor", tonumber('ff0000ff', 16))
+	obs.obs_data_set_default_int(settings, "ProgramBrightness", 5)
 end
 
 function script_update(settings)
-	local settings_table = settings_table(settings)
-	for k, v in pairs(settings_table) do
-		obs.script_log(obs.LOG_INFO, "Possible source: " .. k)
-		if string.sub(k, 0, 6) ~= "tally^" then
-			light_mapping[k] = v
-		end
-	end
-
-	idle_color = obs.obs_data_get_int(settings, "tally^IdleColor")
-	idle_brightness = obs.obs_data_get_int(settings, "tally^IdleBrightness")
-	preview_color = obs.obs_data_get_int(settings, "tally^PreviewColor")
-	preview_brightness = obs.obs_data_get_int(settings, "tally^PreviewBrightness")
-	program_color = obs.obs_data_get_int(settings, "tally^ProgramColor")
-	program_brightness = obs.obs_data_get_int(settings, "tally^ProgramBrightness")
-end
-
-function script_properties()
-	local props = obs.obs_properties_create()
-
-	obs.obs_properties_add_color(props, "tally^IdleColor", "Idle Color")
-	obs.obs_properties_add_int_slider(props, "tally^IdleBrightness", "Idle Brightness", 0, 10, 1)
-	obs.obs_properties_add_color(props, "tally^PreviewColor", "Queued Color")
-	obs.obs_properties_add_int_slider(props, "tally^PreviewBrightness", "Queued Brightness", 0, 10, 1)
-	obs.obs_properties_add_color(props, "tally^ProgramColor", "Live Color")
-	obs.obs_properties_add_int_slider(props, "tally^ProgramBrightness", "Live Brightness", 0, 10, 1)
+	idle_color = obs.obs_data_get_int(settings, "IdleColor")
+	idle_brightness = obs.obs_data_get_int(settings, "IdleBrightness")
+	preview_color = obs.obs_data_get_int(settings, "PreviewColor")
+	preview_brightness = obs.obs_data_get_int(settings, "PreviewBrightness")
+	program_color = obs.obs_data_get_int(settings, "ProgramColor")
+	program_brightness = obs.obs_data_get_int(settings, "ProgramBrightness")
 
 	local sources = obs.obs_enum_sources()
 	if sources ~= nil then
@@ -70,7 +40,31 @@ function script_properties()
 			source_id = obs.obs_source_get_id(source)
 			if source_id == "av_capture_input" then
 				local source_name = obs.obs_source_get_name(source)
-				obs.script_log(obs.LOG_INFO, "Found source: " .. source_name)
+				obs.script_log(obs.LOG_INFO, "Retrieving source: " .. source_name)
+				light_mapping[source_name] = obs.obs_data_get_string(settings, source_name)
+			end
+		end
+	end
+	obs.source_list_release(sources)
+end
+
+function script_properties()
+	local props = obs.obs_properties_create()
+
+	obs.obs_properties_add_color(props, "IdleColor", "Idle Color")
+	obs.obs_properties_add_int_slider(props, "IdleBrightness", "Idle Brightness", 0, 10, 1)
+	obs.obs_properties_add_color(props, "PreviewColor", "Queued Color")
+	obs.obs_properties_add_int_slider(props, "PreviewBrightness", "Queued Brightness", 0, 10, 1)
+	obs.obs_properties_add_color(props, "ProgramColor", "Live Color")
+	obs.obs_properties_add_int_slider(props, "ProgramBrightness", "Live Brightness", 0, 10, 1)
+
+	local sources = obs.obs_enum_sources()
+	if sources ~= nil then
+		for _, source in ipairs(sources) do
+			source_id = obs.obs_source_get_id(source)
+			if source_id == "av_capture_input" then
+				local source_name = obs.obs_source_get_name(source)
+				obs.script_log(obs.LOG_INFO, "Loading source: " .. source_name)
 				obs.obs_properties_add_text(props, source_name, source_name .. " light addr:", obs.OBS_TEXT_DEFAULT)
 			end
 		end
@@ -101,7 +95,7 @@ function call_tally_light(source, color, brightness)
 		do return end
 	end
 
-	local hexColor = substr(hex(color), 10, 3)
+	local hexColor = string.format("%x", color)
 	local pctBright = brightness / 10
 	local url = "http://" .. addr .. ":7413/set?color=" .. hexColor .. "&brightness=" .. pctBright
 
@@ -130,16 +124,14 @@ end
 
 function set_lights_by_items(item_names, color, brightness)
 	for _, item_name in pairs(item_names) do
-		obs.script_log(obs.LOG_INFO, "Calling Light for [%s]" .. item_name)
+		obs.script_log(obs.LOG_INFO, "Calling Light for: " .. item_name)
 		call_tally_light(item_name, color, brightness)
 	end
 end
 
 function set_idle_lights()
-	local excluded_items = table.insert(program_items, preview_items)
-
 	for src, addr in pairs(light_mapping) do
-		if excluded_items[src] == null then
+		if program_items[src] == null and preview_items[src] == null then
 			call_tally_light(src, idle_color, idle_brightness)
 		end
 	end

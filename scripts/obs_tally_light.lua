@@ -17,6 +17,17 @@ Remote tally lights for camera input sources.
 ]]
 end
 
+function settings_table(settings)
+	local settings_table = {}
+	for item = obs.obs_data_first(settings), obs.obs_data_item_next(item) do
+		local name = obs.obs_data_item_get_name(item)
+		local value = obs.obs_data_item_get_string(item)
+		settings_table[name] = value
+	end
+
+	return settings_table
+end
+
 function script_defaults(settings)
 	obs.obs_data_set_default_int(settings, "tally^IdleColor", tonumber('ffff0000', 16))
 	obs.obs_data_set_default_int(settings, "tally^IdleBrightness", 5)
@@ -27,9 +38,10 @@ function script_defaults(settings)
 end
 
 function script_update(settings)
-	local settings_map = settings_dict(settings)
-	for k, v in ipairs(settings_map) do
-		if strsub(k, 0, 6) ~= "tally^" then
+	local settings_table = settings_table(settings)
+	for k, v in pairs(settings_table) do
+		obs.script_log(obs.LOG_INFO, "Possible source: " .. k)
+		if string.sub(k, 0, 6) ~= "tally^" then
 			light_mapping[k] = v
 		end
 	end
@@ -68,10 +80,6 @@ function script_properties()
 	return props
 end
 
-function script_update(_settings)
-	settings = _settings
-end
-
 function script_load(settings)
 	obs.obs_frontend_add_event_callback(handle_event)
 end
@@ -106,22 +114,22 @@ function get_item_names_by_scene(source)
 	local scene_name = obs.obs_source_get_name(source)
 	local scene_items = obs.obs_scene_enum_items(scene)
 
-	if scene_items ~= nil then
-		for _, scene_item in ipairs(scene_items) do
-			local item_source = obs.obs_sceneitem_get_source(scene_item)
-			local item_name = obs.obs_source_get_name(item_source)
-			if light_mapping[item_name] ~= nil then
-				table.insert(item_names, item_name)
-			end
+	for _, item in pairs(scene_items) do
+		local item_source = obs.obs_sceneitem_get_source(item)
+		local item_name = obs.obs_source_get_name(item_source)
+		if light_mapping[item_name] ~= nil then
+			obs.script_log(obs.LOG_INFO, "Scene Item: " .. item_name)
+			table.insert(item_names, item_name)
 		end
-		obs.sceneitem_list_release(scene_items)
 	end
+
+	obs.sceneitem_list_release(scene_items)
 
 	return item_names
 end
 
 function set_lights_by_items(item_names, color, brightness)
-	for _, item_name in ipairs(item_names) do
+	for _, item_name in pairs(item_names) do
 		obs.script_log(obs.LOG_INFO, "Calling Light for [%s]" .. item_name)
 		call_tally_light(item_name, color, brightness)
 	end
@@ -130,7 +138,7 @@ end
 function set_idle_lights()
 	local excluded_items = table.insert(program_items, preview_items)
 
-	for src, addr in ipairs(light_mapping) do
+	for src, addr in pairs(light_mapping) do
 		if excluded_items[src] == null then
 			call_tally_light(src, idle_color, idle_brightness)
 		end
@@ -163,7 +171,7 @@ function handle_program_change()
 end
 
 function handle_exit()
-	for src, addr in ipairs(light_mapping.items) do
+	for src, addr in pairs(light_mapping.items) do
 		call_tally_light(src, "00000000", 0);
 	end
 end

@@ -123,14 +123,14 @@ def get_item_names_by_scene(source):
 def set_lights_by_items(item_names, color, brightness):
 	for item_name in item_names:
 		obs.script_log(obs.LOG_INFO, 'Calling Light for [%s]' % (item_name))
-		call_tally_light(item_name, color, brightness);
+		call_tally_light(item_name, color, brightness)
 
 def set_idle_lights():
 	excluded_items = program_items + preview_items
 
 	for src, addr in light_mapping.items():
 		if src not in excluded_items:
-			call_tally_light(src, idle_color, idle_brightness);
+			call_tally_light(src, idle_color, idle_brightness)
 
 def handle_preview_change():
 	global preview_items
@@ -146,7 +146,7 @@ def handle_preview_change():
 	if program_name != preview_name:
 		set_lights_by_items(preview_items, preview_color, preview_brightness)
 
-	obs.obs_source_release(preview_source);
+	obs.obs_source_release(preview_source)
 	set_idle_lights()
 
 def handle_program_change():
@@ -155,7 +155,7 @@ def handle_program_change():
 	program_source = obs.obs_frontend_get_current_scene()
 	program_items = get_item_names_by_scene(program_source)
 	set_lights_by_items(program_items, program_color, program_brightness)
-	obs.obs_source_release(program_source);
+	obs.obs_source_release(program_source)
 	set_idle_lights()
 
 def handle_exit():

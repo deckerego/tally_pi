@@ -14,12 +14,12 @@ program_brightness = 5
 program_items = []
 http_timeout_seconds = 4
 
+def script_description():
+	return "Remote tally lights for camera input sources."
+
 def settings_dict(settings):
 	settings_json = obs.obs_data_get_json(settings)
 	return json.loads(settings_json)
-
-def script_description():
-	return "Remote tally lights for camera input sources."
 
 def script_defaults(settings):
 	obs.obs_data_set_default_int(settings, "tally^IdleColor", int('ffff0000', 16))
@@ -91,9 +91,12 @@ def call_tally_light(source, color, brightness):
 		obs.script_log(obs.LOG_INFO, 'No tally light set for: %s' % (source))
 		return
 
-	hexColor = hex(color)[10:3:-1]
+	hexColor = hex(color)
+	hexBlue = hexColor[2:4]
+	hexGreen = hexColor[4:6]
+	hexRed = hexColor[6:8]
 	pctBright = brightness / 10
-	url = 'http://%s:7413/set?color=%s&brightness=%f' % (addr, hexColor, pctBright)
+	url = 'http://%s:7413/set?color=%s%s%s&brightness=%f' % (addr, hexRed, hexGreen, hexBlue, pctBright)
 
 	try:
 		with urllib.request.urlopen(url, None, http_timeout_seconds) as response:
@@ -123,21 +126,21 @@ def get_item_names_by_scene(source):
 def set_lights_by_items(item_names, color, brightness):
 	for item_name in item_names:
 		obs.script_log(obs.LOG_INFO, 'Calling Light for [%s]' % (item_name))
-		call_tally_light(item_name, color, brightness);
+		call_tally_light(item_name, color, brightness)
 
 def set_idle_lights():
 	excluded_items = program_items + preview_items
 
 	for src, addr in light_mapping.items():
 		if src not in excluded_items:
-			call_tally_light(src, idle_color, idle_brightness);
+			call_tally_light(src, idle_color, idle_brightness)
 
 def handle_preview_change():
 	global preview_items
 
 	program_source = obs.obs_frontend_get_current_scene()
 	program_name = obs.obs_source_get_name(program_source)
-	obs.obs_source_release(program_source);
+	obs.obs_source_release(program_source)
 
 	preview_source = obs.obs_frontend_get_current_preview_scene()
 	preview_name = obs.obs_source_get_name(preview_source)
@@ -146,7 +149,7 @@ def handle_preview_change():
 	if program_name != preview_name:
 		set_lights_by_items(preview_items, preview_color, preview_brightness)
 
-	obs.obs_source_release(preview_source);
+	obs.obs_source_release(preview_source)
 	set_idle_lights()
 
 def handle_program_change():
@@ -155,9 +158,9 @@ def handle_program_change():
 	program_source = obs.obs_frontend_get_current_scene()
 	program_items = get_item_names_by_scene(program_source)
 	set_lights_by_items(program_items, program_color, program_brightness)
-	obs.obs_source_release(program_source);
+	obs.obs_source_release(program_source)
 	set_idle_lights()
 
 def handle_exit():
 	for src, addr in light_mapping.items():
-		call_tally_light(src, "00000000", 0);
+		call_tally_light(src, "00000000", 0)

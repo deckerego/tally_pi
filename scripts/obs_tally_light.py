@@ -91,9 +91,12 @@ def call_tally_light(source, color, brightness):
 		obs.script_log(obs.LOG_INFO, 'No tally light set for: %s' % (source))
 		return
 
-	hexColor = hex(color)[10:3:-1]
+	hexColor = hex(color)
+	hexBlue = hexColor[2:4]
+	hexGreen = hexColor[4:6]
+	hexRed = hexColor[6:8]
 	pctBright = brightness / 10
-	url = 'http://%s:7413/set?color=%s&brightness=%f' % (addr, hexColor, pctBright)
+	url = 'http://%s:7413/set?color=%s%s%s&brightness=%f' % (addr, hexRed, hexGreen, hexBlue, pctBright)
 
 	try:
 		with urllib.request.urlopen(url, None, http_timeout_seconds) as response:

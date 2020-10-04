@@ -104,9 +104,12 @@ function call_tally_light(source, color, brightness)
 		do return end
 	end
 
-	local hexColor = string.sub(string.format("%x", color), 3)
+	local hexColor = string.format("%x", color)
+	local hexBlue = string.sub(hexColor, 3, 4)
+	local hexGreen = string.sub(hexColor, 5, 6)
+	local hexRed = string.sub(hexColor, 7, 8)
 	local pctBright = brightness / 10
-	local url = "http://" .. addr .. ":7413/set?color=" .. hexColor .. "&brightness=" .. pctBright
+	local url = "http://" .. addr .. ":7413/set?color=" .. hexRed .. hexGreen .. hexBlue .. "&brightness=" .. pctBright
 
 	local status = os.execute("curl --connect-timeout 2 --max-time 4 '" .. url .. "'" )
 	if status > 0 then

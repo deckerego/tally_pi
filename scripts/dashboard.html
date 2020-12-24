@@ -1,0 +1,32 @@
+<html>
+<head>
+  <title>Tally Pi Dashboard</title>
+</head>
+
+<body>
+  <div id="light">
+  </div>
+
+  <script type="text/javascript">
+    var request = new XMLHttpRequest();
+    request.open("GET", "http://192.168.1.26:7413/status", true);
+
+    request.onload = function(evt) {
+      var response = JSON.parse(request.responseText);
+
+      var color = "#"
+      color += response.red.toString().padStart(2, '0');
+      color += response.green.toString().padStart(2, '0');
+      color += response.blue.toString().padStart(2, '0');
+      document.getElementById("light").innerHTML = response.brightness.toString();
+      document.getElementById("light").style.color = color;
+    };
+
+    request.onerror = function(evt) {
+      console.log(request.responseText);
+    };
+
+    request.send();
+  </script>
+</body>
+</html>

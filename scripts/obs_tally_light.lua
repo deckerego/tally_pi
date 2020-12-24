@@ -111,7 +111,7 @@ function call_tally_light(source, color, brightness)
 	local pctBright = brightness / 10
 	local url = "http://" .. addr .. ":7413/set?color=" .. hexRed .. hexGreen .. hexBlue .. "&brightness=" .. pctBright
 
-	local status = os.execute("curl --connect-timeout 2 --max-time 4 '" .. url .. "'" )
+	local status = os.execute("curl --connect-timeout 5 --max-time 15 '" .. url .. "'  2>&1 &" )
 	if status > 0 then
 		obs.script_log(obs.LOG_ERROR, "Error connecting to: " .. url)
 	end

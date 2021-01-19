@@ -10,6 +10,16 @@ program_color = tonumber('FFFF0000', 16)
 program_brightness = 5
 program_items = {}
 http_timeout_seconds = 4
+eligible_input_ids = { "av_capture_input", "droidcam_obs" }
+
+function contains(list, element)
+	for _,item in pairs(list) do
+		if item == element then
+			return true
+		end
+	end
+	return false
+end
 
 function script_description()
 	return [[
@@ -44,7 +54,7 @@ function load_input_settings(settings)
 	if sources ~= nil then
 		for _, source in ipairs(sources) do
 			source_id = obs.obs_source_get_id(source)
-			if source_id == "av_capture_input" then
+			if contains(eligible_input_ids, source_id) then
 				local source_name = obs.obs_source_get_name(source)
 				obs.script_log(obs.LOG_INFO, "Retrieving source: " .. source_name)
 				light_mapping[source_name] = obs.obs_data_get_string(settings, source_name)
@@ -68,7 +78,7 @@ function script_properties()
 	if sources ~= nil then
 		for _, source in ipairs(sources) do
 			source_id = obs.obs_source_get_id(source)
-			if source_id == "av_capture_input" then
+			if contains(eligible_input_ids, source_id) then
 				local source_name = obs.obs_source_get_name(source)
 				obs.script_log(obs.LOG_INFO, "Loading source: " .. source_name)
 				obs.obs_properties_add_text(props, source_name, source_name .. " light addr:", obs.OBS_TEXT_DEFAULT)

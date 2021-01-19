@@ -64,7 +64,7 @@ def script_properties():
 	if sources is not None:
 		for source in sources:
 			source_id = obs.obs_source_get_id(source)
-			if source_id == 'av_capture_input':
+			if source_id in ['av_capture_input', 'droidcam_obs']:
 				source_name = obs.obs_source_get_name(source)
 				obs.script_log(obs.LOG_INFO, "Found source: " + source_name)
 				obs.obs_properties_add_text(props, source_name, source_name + " light addr:", obs.OBS_TEXT_DEFAULT)

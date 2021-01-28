@@ -92,9 +92,9 @@ def call_tally_light(source, color, brightness):
 		return
 
 	hexColor = hex(color)
-	hexBlue = hexColor[2:4]
-	hexGreen = hexColor[4:6]
-	hexRed = hexColor[6:8]
+	hexBlue = hexColor[4:6]
+	hexGreen = hexColor[6:8]
+	hexRed = hexColor[8:10]
 	pctBright = brightness / 10
 	url = 'http://%s:7413/set?color=%s%s%s&brightness=%f' % (addr, hexRed, hexGreen, hexBlue, pctBright)
 

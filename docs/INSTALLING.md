@@ -50,6 +50,8 @@ The first thing you want to do once the Pi is connected to your network is
 set a new password, set your hostname, and possibly expand your filesystem
 using `sudo raspi-config`.
 
+
+
 I would also recommend you set up Uncomplicated Firewall using:
 
     sudo apt-get install ufw
@@ -142,3 +144,48 @@ for any available TallyPi lights. If your wireless network is on the subnet
 
 The script will then crawl across your network, looking for an
 open 7413 port.
+
+
+## Troubleshooting WiFi Issues
+
+The tally lights require a consistent wireless connection to work. Following are some known issues with wireless and Raspbian with the Raspberry Pi Zero W.
+
+### WiFi Adapter Power Saving
+
+Raspbian on the Raspberry Pi Zero W _should_ disable power management on the build-in wireless network interface... but for some reason it seems to switch itself back on every so often. You can confirm this by running `dmesg` and finding the following lines:
+
+    [   28.567231] brcmfmac: brcmf_cfg80211_set_power_mgmt: power save enabled
+    [   30.082015] IPv6: ADDRCONF(NETDEV_CHANGE): wlan0: link becomes ready
+
+You can confirm if power saving is on for the default wireless module by running & reviewing:
+
+    pi@tally01:~ $ sudo iwconfig wlan0
+    wlan0     IEEE 802.11  ESSID:"YourWifi"  
+      Mode:Managed  Frequency:2.462 GHz  Access Point: FE:ED:FA:CE:BE:EF   
+      Bit Rate=24 Mb/s   Tx-Power=31 dBm   
+      Retry short limit:7   RTS thr:off   Fragment thr:off
+      Encryption key:off
+      Power Management:on
+
+Note the line `Power Management: on`. This indicates that power management is enabled for the device, even though the Raspbian kernel was supposed to have disabled that.
+
+You can disable power management for a running system using:
+
+    sudo iw wlan0 set power_save off
+
+Your best option to disable power management is to update Raspbian and make sure you are on the latest version - current releases should have this disabled. _However_, if your latest build of Raspbian still does work, you can add the following lines to `/etc/rc.local`:
+
+    # Don't let the default wireless interface go to sleep
+    iw wlan0 set power_save off
+
+Note I've attempted to add `wireless-power off` to the interfaces config, but the setting doesn't seem to be properly obeyed in some Raspbian builds.
+
+You can then reboot your tally light and confirm power management is disabled:
+
+    pi@tally01:~ $ sudo iwconfig wlan0
+    wlan0     IEEE 802.11  ESSID:"YourWifi"  
+      Mode:Managed  Frequency:2.462 GHz  Access Point: FE:ED:FA:CE:BE:EF   
+      Bit Rate=24 Mb/s   Tx-Power=31 dBm   
+      Retry short limit:7   RTS thr:off   Fragment thr:off
+      Encryption key:off
+      Power Management:off

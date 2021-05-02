@@ -1,0 +1,23 @@
+<html>
+<head>
+  <title>Tally Pi Dashboard</title>
+</head>
+
+<body>
+  Light: <span id="localhost">localhost</span>
+  <br/>
+
+  <script type="text/javascript">
+    const request = new XMLHttpRequest();
+    request.open("GET", "http://localhost:7413/status", true);
+
+    request.onload = function(evt) {
+      const response = JSON.parse(request.responseText);
+      const color = response.red.toString(16) + response.green.toString(16) + response.blue.toString(16);
+      document.getElementById("localhost").style.color = color;
+    };
+
+    request.send();
+  </script>
+</body>
+</html>

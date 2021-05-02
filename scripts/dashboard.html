@@ -4,17 +4,17 @@
 </head>
 
 <body>
-  Light: <span id="localhost">localhost</span>
-  <br/>
+  <div width=330 id="tallyLight">Light 01</div>
 
   <script type="text/javascript">
+    const tallyLight = 'localhost';
     const request = new XMLHttpRequest();
-    request.open("GET", "http://localhost:7413/status", true);
+    request.open("GET", `http://${tallyLight}:7413/status`, true);
 
     request.onload = function(evt) {
       const response = JSON.parse(request.responseText);
-      const color = response.red.toString(16) + response.green.toString(16) + response.blue.toString(16);
-      document.getElementById("localhost").style.color = color;
+      const color = `#${response.red.toString(16).padStart(2, '0')}${response.green.toString(16).padStart(2, '0')}${response.blue.toString(16).padStart(2, '0')}`;
+      document.getElementById("tallyLight").style.backgroundColor = color;
     };
 
     request.send();

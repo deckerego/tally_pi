@@ -1,6 +1,6 @@
 # OBS Script
 
-TallyPi was created to work with [OBS](https://obsproject.com/) as a script
+TallyPi was created to work with [OBS](https://obsproject.com/forum/resources/tallypi-push-scene-changes-to-wifi-enabled-tally-lights.1082/) as a script
 that fires whenever a video input source switches from program, preview,
 or idle modes.
 

@@ -1,0 +1,115 @@
+<html>
+<head>
+  <title>Tally Pi Dashboard</title>
+  <style type="text/css">
+    body {
+      font-family: monospace;
+      font-size: 18px;
+    }
+
+    input {
+      font-family: monospace;
+      font-size: 18px;
+    }
+
+    button {
+      font-family: monospace;
+      font-size: 18px;
+      background-color: #DFDFDF;
+    }
+
+    table {
+      font-family: monospace;
+      font-size: 18px;
+    }
+
+    th {
+      text-align: left;
+      border-bottom: 2px solid black;
+    }
+
+    td {
+      padding: 10px 40px 5px 5px;
+      border-bottom: 1px solid gray;
+    }
+  </style>
+</head>
+
+<body>
+  <input id="subnet" type="text" value="192.168.1" maxlength="11"></input>
+  <button onclick="searchLights();">Find Lights</button>
+
+  <div id="status">
+    Ready to search...
+  </div>
+
+  <table id="lights">
+  </table>
+
+  <script type="text/javascript">
+    function searchLights() {
+      const subnet = document.getElementById("subnet").value;
+      const status = document.getElementById("status");
+      const table = document.getElementById("lights");
+      const startQuad = 2;
+      const endQuad = 253;
+      let expectedCount = endQuad - startQuad + 1;
+
+      while (table.firstChild) {
+        table.removeChild(table.firstChild);
+      }
+
+      status.innerHTML = "Searching...";
+
+      for(let quad = startQuad; quad <= endQuad; ++quad) {
+        const ipAddr = subnet + "." + quad;
+        const request = new XMLHttpRequest();
+        request.timeout = 2000
+        request.open("GET", `http://${ipAddr}:7413/status`, true);
+
+        request.onload = function(evt) {
+          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipAddr}`;
+          const response = JSON.parse(request.responseText);
+          const color = `#${response.red.toString(16).padStart(2, '0')}${response.green.toString(16).padStart(2, '0')}${response.blue.toString(16).padStart(2, '0')}`;
+          const row = createRow(ipAddr, color);
+          table.appendChild(row);
+        };
+
+        request.onerror = function(evt) {
+          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipAddr}`;
+          console.log(`Error connecting to ${ipAddr}, continuing...`);
+        };
+
+        request.ontimeout = function(evt) {
+          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipAddr}`;
+          console.log(`Timeout connecting to ${ipAddr}, continuing...`);
+        };
+
+        try {
+          request.send();
+        } catch(e) {
+          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipAddr}`;
+          console.log(`Could not connect to ${ipAddr}, continuing...`)
+        }
+      }
+    }
+
+    function createRow(text, color) {
+      const ipCell = document.createElement("TD");
+      const ipContent = document.createTextNode(text);
+      ipCell.appendChild(ipContent);
+
+      const colorCell = document.createElement("TD");
+      const colorContent = document.createTextNode(color);
+      colorCell.appendChild(colorContent);
+      colorCell.style.backgroundColor = color;
+
+      const row = document.createElement("TR");
+      row.appendChild(ipCell);
+      row.appendChild(colorCell);
+
+      return row;
+    }
+  </script>
+</body>
+</html>

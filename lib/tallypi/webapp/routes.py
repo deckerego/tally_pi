@@ -26,6 +26,12 @@ application.install(pHat)
 def _to_json(r, g, b, bright):
     return '{ "red": %i, "green": %i, "blue": %i, "brightness": %f }' % (r, g, b, bright)
 
+@application.hook('after_request')
+def access_control():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST'
+    response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+
 @application.route('/status')
 def light_status(light):
     red, green, blue = light.getColor()

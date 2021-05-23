@@ -7,6 +7,15 @@
       font-size: 18px;
     }
 
+    h1 {
+      font-family: monospace;
+      font-size: 24px;
+    }
+
+    div {
+      margin-bottom: 5px;
+    }
+
     input {
       font-family: monospace;
       font-size: 18px;
@@ -15,7 +24,17 @@
     button {
       font-family: monospace;
       font-size: 18px;
+      border: none;
+      border-radius: 2px;
       background-color: #DFDFDF;
+      box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+      margin-bottom: 8px;
+      transition-duration: 0.4s;
+    }
+
+    button:hover {
+      background-color: #4BB050;
+      color: #000000;
     }
 
     table {
@@ -36,11 +55,15 @@
 </head>
 
 <body>
-  <input id="subnet" type="text" value="192.168.1" maxlength="11"></input>
-  <button onclick="searchLights();">Find Lights</button>
+  <h1>Tally Light Dashboard</h1>
 
-  <div id="status">
-    Ready to search...
+  <div id="input">
+    IPv4 Subnet to search: <input id="subnet" type="text" value="192.168.1" maxlength="11"></input>
+  </div>
+
+  <div id="action">
+    <button onclick="searchLights();">Find Lights</button>
+    <span id="status">Ready to search...</span>
   </div>
 
   <table id="lights">
@@ -71,7 +94,8 @@
           status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipAddr}`;
           const response = JSON.parse(request.responseText);
           const color = `#${response.red.toString(16).padStart(2, '0')}${response.green.toString(16).padStart(2, '0')}${response.blue.toString(16).padStart(2, '0')}`;
-          const row = createRow(ipAddr, color);
+          const brightness = response.brightness;
+          const row = createRow(ipAddr, color, 0.5);
           table.appendChild(row);
         };
 
@@ -94,21 +118,56 @@
       }
     }
 
-    function createRow(text, color) {
-      const ipCell = document.createElement("TD");
-      const ipContent = document.createTextNode(text);
-      ipCell.appendChild(ipContent);
+    function createRow(ipaddr, color, brightness) {
+      const row = document.createElement("TR");
+      row.appendChild(createTextCell(ipaddr));
+      row.appendChild(createColorCell(ipaddr, color));
+      row.appendChild(createBrightnessCell(ipaddr, brightness));
+      return row;
+    }
+
+    function createTextCell(text) {
+      const txtContent = document.createTextNode(text);
+      const txtCell = document.createElement("TD");
+      txtCell.appendChild(txtContent);
+      return txtCell;
+    }
+
+    function createColorCell(label, color) {
+      const colorContent = document.createElement("input");
+      colorContent.type = "color";
+      colorContent.value = color;
+      colorContent.id = `color#${label}`;
+
+      const txtContent = document.createTextNode(color);
+      const colorLabel = document.createElement("label");
+      colorLabel.htmlFor = `color#${label}`;
+      colorLabel.appendChild(txtContent);
 
       const colorCell = document.createElement("TD");
-      const colorContent = document.createTextNode(color);
       colorCell.appendChild(colorContent);
-      colorCell.style.backgroundColor = color;
+      colorCell.appendChild(colorLabel);
+      return colorCell;
+    }
 
-      const row = document.createElement("TR");
-      row.appendChild(ipCell);
-      row.appendChild(colorCell);
+    function createBrightnessCell(label, brightness) {
+      const brightContent = document.createElement("input");
+      brightContent.type = "range";
+      brightContent.min = 0;
+      brightContent.max = 1;
+      brightContent.step = 0.05;
+      brightContent.value = brightness;
+      brightContent.id = `bright#${label}`;
 
-      return row;
+      const txtContent = document.createTextNode(brightness);
+      const brightLabel = document.createElement("label");
+      brightLabel.htmlFor = `bright#${label}`;
+      brightLabel.appendChild(txtContent);
+
+      const brightCell = document.createElement("TD");
+      brightCell.appendChild(brightContent);
+      brightCell.appendChild(brightLabel);
+      return brightCell;
     }
   </script>
 </body>

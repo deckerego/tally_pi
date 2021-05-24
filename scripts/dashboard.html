@@ -85,41 +85,62 @@
       status.innerHTML = "Searching...";
 
       for(let quad = startQuad; quad <= endQuad; ++quad) {
-        const ipAddr = subnet + "." + quad;
+        const ipaddr = subnet + "." + quad;
         const request = new XMLHttpRequest();
         request.timeout = 2000
-        request.open("GET", `http://${ipAddr}:7413/status`, true);
+        request.open("GET", `http://${ipaddr}:7413/status`, true);
 
         request.onload = function(evt) {
-          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipAddr}`;
-          const response = JSON.parse(request.responseText);
-          const color = `#${response.red.toString(16).padStart(2, '0')}${response.green.toString(16).padStart(2, '0')}${response.blue.toString(16).padStart(2, '0')}`;
-          const brightness = response.brightness;
-          const row = createRow(ipAddr, color, 0.5);
-          table.appendChild(row);
+          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipaddr}`;
+          const lightStatus = JSON.parse(request.responseText);
+          table.appendChild(createRow(ipaddr, lightStatus));
         };
 
         request.onerror = function(evt) {
-          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipAddr}`;
-          console.log(`Error connecting to ${ipAddr}, continuing...`);
+          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipaddr}`;
+          console.log(`Error connecting to ${ipaddr}, continuing...`);
         };
 
         request.ontimeout = function(evt) {
-          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipAddr}`;
-          console.log(`Timeout connecting to ${ipAddr}, continuing...`);
+          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipaddr}`;
+          console.log(`Timeout connecting to ${ipaddr}, continuing...`);
         };
 
         try {
           request.send();
         } catch(e) {
-          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipAddr}`;
-          console.log(`Could not connect to ${ipAddr}, continuing...`)
+          console.log(e);
+          status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipaddr}`;
+          console.log(`Could not connect to ${ipaddr}, continuing...`)
         }
       }
     }
 
-    function createRow(ipaddr, color, brightness) {
+    function setLight(ipaddr) {
+      const color = document.getElementById(`color#${ipaddr}`).value.substring(1);
+      const brightness = document.getElementById(`bright#${ipaddr}`).value;
+
+      const request = new XMLHttpRequest();
+      request.timeout = 2000
+      request.open("GET", `http://${ipaddr}:7413/set?color=${color}&brightness=${brightness}`, true);
+
+      request.onload = function(evt) {
+        const lightStatus = JSON.parse(request.responseText);
+        const row = document.getElementById(`row#${ipaddr}`);
+        row.replaceChildren(...createRow(ipaddr, lightStatus).children);
+      };
+      request.onerror = (evt) => console.log(`Error updating ${ipaddr}`);
+      request.ontimeout = (evt) => console.log(`Timeout updating ${ipaddr}`);
+
+      request.send();
+    }
+
+    function createRow(ipaddr, status) {
+      const color = `${status.red.toString(16).padStart(2, '0')}${status.green.toString(16).padStart(2, '0')}${status.blue.toString(16).padStart(2, '0')}`;
+      const brightness = status.brightness;
+
       const row = document.createElement("TR");
+      row.id = `row#${ipaddr}`;
       row.appendChild(createTextCell(ipaddr));
       row.appendChild(createColorCell(ipaddr, color));
       row.appendChild(createBrightnessCell(ipaddr, brightness));
@@ -133,15 +154,18 @@
       return txtCell;
     }
 
-    function createColorCell(label, color) {
+    function createColorCell(ipaddr, color) {
+      const hexColor = `#${color}`;
+
       const colorContent = document.createElement("input");
       colorContent.type = "color";
-      colorContent.value = color;
-      colorContent.id = `color#${label}`;
+      colorContent.value = hexColor;
+      colorContent.id = `color#${ipaddr}`;
+      colorContent.addEventListener("change", () => setLight(ipaddr));
 
-      const txtContent = document.createTextNode(color);
+      const txtContent = document.createTextNode(hexColor);
       const colorLabel = document.createElement("label");
-      colorLabel.htmlFor = `color#${label}`;
+      colorLabel.htmlFor = `color#${ipaddr}`;
       colorLabel.appendChild(txtContent);
 
       const colorCell = document.createElement("TD");
@@ -150,18 +174,19 @@
       return colorCell;
     }
 
-    function createBrightnessCell(label, brightness) {
+    function createBrightnessCell(ipaddr, brightness) {
       const brightContent = document.createElement("input");
       brightContent.type = "range";
       brightContent.min = 0;
       brightContent.max = 1;
       brightContent.step = 0.05;
       brightContent.value = brightness;
-      brightContent.id = `bright#${label}`;
+      brightContent.id = `bright#${ipaddr}`;
+      brightContent.addEventListener("change", () => setLight(ipaddr));
 
       const txtContent = document.createTextNode(brightness);
       const brightLabel = document.createElement("label");
-      brightLabel.htmlFor = `bright#${label}`;
+      brightLabel.htmlFor = `bright#${ipaddr}`;
       brightLabel.appendChild(txtContent);
 
       const brightCell = document.createElement("TD");

@@ -67,7 +67,7 @@ Once the script is installed, you can use the settings interface to specify
 colors for idle/preview/program cameras, and map each camera source to an
 IP address or hostname that corresponds to a tally light.
 
-![OBS script settings](./imags/obs_settings.png)
+![OBS script settings](./images/obs_settings.png)
 
 If you are having trouble finding your lights by hostname, you can use either
 the [HTML dashboard page](../scripts/dashboard.html) or

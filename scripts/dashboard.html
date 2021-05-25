@@ -73,8 +73,8 @@
     function searchLights() {
       const status = document.getElementById("status");
       const table = document.getElementById("lights");
-      const range = getIPRange(document.getElementById("subnet").value);
-      let expectedCount = range[1] - range[0] + 1;
+      const [startAddr, endAddr] = getIPRange(document.getElementById("subnet").value);
+      let expectedCount = startAddr - endAddr + 1;
 
       while (table.firstChild) {
         table.removeChild(table.firstChild);
@@ -82,7 +82,7 @@
 
       status.innerHTML = "Searching...";
 
-      for(let binaddr = range[0]; binaddr <= range[1]; ++binaddr) {
+      for(let binaddr = startAddr; binaddr <= endAddr; ++binaddr) {
         const ipaddr = binToQuads(binaddr);
         const request = new XMLHttpRequest();
         request.timeout = 2000;

@@ -58,7 +58,7 @@
   <h1>Tally Light Dashboard</h1>
 
   <div id="input">
-    IPv4 Subnet to search: <input id="subnet" type="text" value="192.168.1" maxlength="11"></input>
+    IPv4 Subnet to search: <input id="subnet" type="text" value="127.0.0.0/24" maxlength="19"></input>
   </div>
 
   <div id="action">
@@ -71,12 +71,10 @@
 
   <script type="text/javascript">
     function searchLights() {
-      const subnet = document.getElementById("subnet").value;
       const status = document.getElementById("status");
       const table = document.getElementById("lights");
-      const startQuad = 2;
-      const endQuad = 253;
-      let expectedCount = endQuad - startQuad + 1;
+      const range = getIPRange(document.getElementById("subnet").value);
+      let expectedCount = range[1] - range[0] + 1;
 
       while (table.firstChild) {
         table.removeChild(table.firstChild);
@@ -84,11 +82,10 @@
 
       status.innerHTML = "Searching...";
 
-      for(let quad = startQuad; quad <= endQuad; ++quad) {
-        const ipaddr = subnet + "." + quad;
+      for(let binaddr = range[0]; binaddr <= range[1]; ++binaddr) {
+        const ipaddr = binToQuads(binaddr);
         const request = new XMLHttpRequest();
-        request.timeout = 2000
-        request.open("GET", `http://${ipaddr}:7413/status`, true);
+        request.timeout = 2000;
 
         request.onload = function(evt) {
           status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipaddr}`;
@@ -98,6 +95,7 @@
 
         request.onerror = function(evt) {
           status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipaddr}`;
+          request.abort();
           console.log(`Error connecting to ${ipaddr}, continuing...`);
         };
 
@@ -107,8 +105,10 @@
         };
 
         try {
+          request.open("GET", `http://${ipaddr}:7413/status`, true);
           request.send();
         } catch(e) {
+          request.abort();
           console.log(e);
           status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipaddr}`;
           console.log(`Could not connect to ${ipaddr}, continuing...`)
@@ -122,7 +122,6 @@
 
       const request = new XMLHttpRequest();
       request.timeout = 2000
-      request.open("GET", `http://${ipaddr}:7413/set?color=${color}&brightness=${brightness}`, true);
 
       request.onload = function(evt) {
         const lightStatus = JSON.parse(request.responseText);
@@ -132,6 +131,7 @@
       request.onerror = (evt) => console.log(`Error updating ${ipaddr}`);
       request.ontimeout = (evt) => console.log(`Timeout updating ${ipaddr}`);
 
+      request.open("GET", `http://${ipaddr}:7413/set?color=${color}&brightness=${brightness}`, true);
       request.send();
     }
 
@@ -193,6 +193,30 @@
       brightCell.appendChild(brightContent);
       brightCell.appendChild(brightLabel);
       return brightCell;
+    }
+
+    function getIPRange(networkString) {
+      const networkdef = networkString.split('/');
+      const netmask = parseInt(networkdef[1])
+      const bitmask = 32 - netmask;
+      const quads = networkdef[0].split('.');
+      const addrbin =
+        (parseInt(quads[0]) << 24) +
+        (parseInt(quads[1]) << 16) +
+        (parseInt(quads[2]) <<  8) +
+        parseInt(quads[3]);
+      const network = (addrbin >>> bitmask) << bitmask;
+      const wildcard = 0xFFFFFFFF >>> netmask;
+      const broadcast = network ^ wildcard;
+      return [network + 1, broadcast - 1];
+    }
+
+    function binToQuads(addrbits) {
+      const quadOne = addrbits >>> 24;
+      const quadTwo = (addrbits & 0x00FF0000) >> 16;
+      const quadThree = (addrbits & 0x0000FF00) >> 8;
+      const quadFour = addrbits & 0x000000FF;
+      return `${quadOne}.${quadTwo}.${quadThree}.${quadFour}`;
     }
   </script>
 </body>

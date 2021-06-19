@@ -4,35 +4,21 @@ TallyPi was created to work with [OBS](https://obsproject.com/forum/resources/ta
 that fires whenever a video input source switches from program, preview,
 or idle modes.
 
-Starting with version 26 OBS no longer supports Python scripts on MacOS, so
-now there are two options: invoke `curl` using a Lua script or call
-your lights directly over HTTP with a Python script.
-
-
-## Installing the Lua Script
-
-Download the latest OBS Lua script for TallyPi from the release page
-at https://github.com/deckerego/tally_pi/releases
-
-Store the script wherever you like, then add the script to OBS by navigating
-to Tools -> Scripts and adding the `obs_tally_light.lua` script
-that you just downloaded.
-
-Note that you must have `curl` installed on your machine for the script
-to function. Rather than calling HTTP endpoints directly, the script has
-to make a system call to the `curl` command line tool.
+OBS 26 on MacOS did not support Python scripts, so for those still using that
+version there is a Lua version that invokes `curl` within the Lua runtime.
+All other users are encouraged to use the Python version of the script.
 
 
 ## Installing the Python Script
 
 Installing the Python version of the script requires a specific version
-of Python 3.7 with shared libraries installed, and then installing the
+of Python 3.9 with shared libraries installed, and then installing the
 Python script itself.
 
-### Installing Python for OBS
+### Installing Python for OBS 27
 
-Currently OBS requires Python 3.7 shared libraries in order to execute
-Python scripts. On Windows this can be done using a Python 3.7 installer,
+Currently OBS 27 requires Python 3.9 shared libraries in order to execute
+Python scripts. On Windows this can be done using a Python 3.9 installer,
 and on MacOS or Linux this can be most easily managed through `pyenv`.
 
 To install `pyenv` on MacOS I recommend first installing
@@ -43,7 +29,7 @@ To install `pyenv` on MacOS I recommend first installing
 
 On MacOS and Linux you can ask `pyenv` to generate the shared libraries with:
 
-    CONFIGURE_OPTS=--enable-shared pyenv install 3.7.8
+    CONFIGURE_OPTS=--enable-shared pyenv install 3.9.4
 
 Once Python is installed, point OBS to the installation path by opening
 OBS and navigating to Tools -> Scripts -> Python Settings
@@ -59,6 +45,20 @@ at https://github.com/deckerego/tally_pi/releases
 Store the script wherever you like, then add the script to OBS by navigating
 to Tools -> Scripts and adding the `obs_tally_light.py` script
 that you just downloaded.
+
+
+## Installing the Lua Script
+
+Download the latest OBS Lua script for TallyPi from the release page
+at https://github.com/deckerego/tally_pi/releases
+
+Store the script wherever you like, then add the script to OBS by navigating
+to Tools -> Scripts and adding the `obs_tally_light.lua` script
+that you just downloaded.
+
+Note that you must have `curl` installed on your machine for the script
+to function. Rather than calling HTTP endpoints directly, the script has
+to make a system call to the `curl` command line tool.
 
 
 ## Configuring the TallyPi Script

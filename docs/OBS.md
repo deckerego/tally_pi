@@ -67,4 +67,10 @@ Once the script is installed, you can use the settings interface to specify
 colors for idle/preview/program cameras, and map each camera source to an
 IP address or hostname that corresponds to a tally light.
 
-![OBS script settings](./imags/obs_settings.png)
+![OBS script settings](./images/obs_settings.png)
+
+If you are having trouble finding your lights by hostname, you can use either
+the [HTML dashboard page](../scripts/dashboard.html) or
+[find_lights.sh](../scripts/find_lights.sh) command-line script to search
+your network for available lights. Either option will provide you with an IPv4
+address for each light found which can be used to setup the OBS plugin.

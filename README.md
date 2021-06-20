@@ -20,7 +20,7 @@ It is available from this repository
 or via [Thingiverse](https://www.thingiverse.com/thing:4590885).
 
 
-## The HTTP Interface
+## The Tally Light API
 
 A web service is provided to expose the Unicorn pHat through an HTTP interface.
 This controls color and brightness, and will monitor the on/off switch
@@ -41,7 +41,17 @@ Details on installing the software, as well as protecting your Pi for
 repeated use, is available within [INSTALLING.md](./docs/INSTALLING.md).
 
 
-### OBS Script
+## Web Dashboard
+
+A web dashboard is provided in [scripts/dashboard.html](./scripts/dashboard.html)
+as a single HTML page that you can load directly in a browser - no server needed.
+Enter in the IPv4 network you would like to search, and the page will quickly
+crawl the network looking for API endpoints listening on port 7413. If it finds
+any tally lights, it will display the IPv4 address, current color, and brightness
+which can be changed directly in the dashboard.
+
+
+## OBS Script
 
 An [OBS script](./scripts/obs_tally_light.lua) is provided that maps
 preview/program/idle status to AV input sources. You can chose the color
@@ -51,3 +61,9 @@ to the IP address or hostname of your tally light web interface.
 You must have installed the correct version of Python for OBS to properly load
 Python plugins. Details for setting up OBS, installing the interface,
 and configuring settings are available at [OBS.md](./docs/OBS.md).
+
+If you are having trouble identifying your lights by hostname, you can use either
+the [HTML dashboard page](./scripts/dashboard.html) or the
+[scripts/find_lights.sh](./scripts/find_lights.sh) command-line script to search
+your network for available lights. Either option will provide you with an IPv4
+address for each light found which can be used to setup the OBS plugin.

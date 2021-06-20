@@ -74,7 +74,7 @@
       const status = document.getElementById("status");
       const table = document.getElementById("lights");
       const [startAddr, endAddr] = getIPRange(document.getElementById("subnet").value);
-      let expectedCount = startAddr - endAddr + 1;
+      let expectedCount = endAddr - startAddr + 1;
 
       while (table.firstChild) {
         table.removeChild(table.firstChild);
@@ -85,7 +85,7 @@
       for(let binaddr = startAddr; binaddr <= endAddr; ++binaddr) {
         const ipaddr = binToQuads(binaddr);
         const request = new XMLHttpRequest();
-        request.timeout = 10000;
+        request.timeout = 5000;
 
         request.onload = function(evt) {
           status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipaddr}`;

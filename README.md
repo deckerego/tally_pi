@@ -53,7 +53,8 @@ which can be changed directly in the dashboard.
 
 ## OBS Script
 
-An [OBS script](./scripts/obs_tally_light.lua) is provided that maps
+An OBS script in both [Python](./scripts/obs_tally_light.py) and 
+[Lua](./scripts/obs_tally_light.lua) is provided that maps
 preview/program/idle status to AV input sources. You can chose the color
 and brightness for the status of your input sources, and map each input source
 to the IP address or hostname of your tally light web interface.

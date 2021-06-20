@@ -50,14 +50,18 @@ crawl the network looking for API endpoints listening on port 7413. If it finds
 any tally lights, it will display the IPv4 address, current color, and brightness
 which can be changed directly in the dashboard.
 
+![Tally Light Dashboard](./docs/images/dashboard.png)
+
 
 ## OBS Script
 
-An OBS script in both [Python](./scripts/obs_tally_light.py) and 
+An OBS script in both [Python](./scripts/obs_tally_light.py) and
 [Lua](./scripts/obs_tally_light.lua) is provided that maps
 preview/program/idle status to AV input sources. You can chose the color
 and brightness for the status of your input sources, and map each input source
 to the IP address or hostname of your tally light web interface.
+
+![OBS Plugin Settings](./docs/images/obs_settings.png)
 
 You must have installed the correct version of Python for OBS to properly load
 Python plugins. Details for setting up OBS, installing the interface,

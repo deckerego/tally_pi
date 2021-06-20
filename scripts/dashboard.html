@@ -85,7 +85,7 @@
       for(let binaddr = startAddr; binaddr <= endAddr; ++binaddr) {
         const ipaddr = binToQuads(binaddr);
         const request = new XMLHttpRequest();
-        request.timeout = 2000;
+        request.timeout = 10000;
 
         request.onload = function(evt) {
           status.innerHTML = --expectedCount <= 0 ? "Done!" : `Checking ${ipaddr}`;

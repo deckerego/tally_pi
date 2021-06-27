@@ -37,11 +37,16 @@ separate directory, delete the debian/ directory, then re-issue:
 Running Locally
 ===============
 
-To test locally:
+To test locally, first ensure that the Python libraries `bottle` and `paste`
+are installed using your package manager of choice (such as pip or apt).
 
-    export PYTHONPATH="$PYTHONPATH:$HOME/Projects/tally_pi/lib"
-    cd srv/tallypi
-    ../../scripts/run_server.py --config "$HOME/Projects/tally_pi/tests/localsettings.conf"
+Once these are installed, customize tests/localsettings.conf to match
+settings for your local environment. If you are not testing on a Raspberry Pi,
+you likely will want to use the mock light and power switch modules.
+
+Once those two things are set up, you can run the HTTP server locally with:
+
+    ./run_server.sh
 
 
 Software License

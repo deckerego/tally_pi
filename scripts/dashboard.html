@@ -137,13 +137,13 @@
 
     function createRow(ipaddr, status) {
       const color = `${status.red.toString(16).padStart(2, '0')}${status.green.toString(16).padStart(2, '0')}${status.blue.toString(16).padStart(2, '0')}`;
-      const brightness = status.brightness;
 
       const row = document.createElement("TR");
       row.id = `row#${ipaddr}`;
+      row.appendChild(createTextCell(status.hostname));
       row.appendChild(createTextCell(ipaddr));
       row.appendChild(createColorCell(ipaddr, color));
-      row.appendChild(createBrightnessCell(ipaddr, brightness));
+      row.appendChild(createBrightnessCell(ipaddr, status.brightness));
       return row;
     }
 

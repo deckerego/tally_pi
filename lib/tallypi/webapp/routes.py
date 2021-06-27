@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import json
+import socket
 
 logging.basicConfig(level=logging.WARN, format='%(levelname)-8s %(message)s')
 logger = logging.getLogger('tallypi')
@@ -24,7 +24,8 @@ application = Bottle()
 application.install(pHat)
 
 def _to_json(r, g, b, bright):
-    return '{ "red": %i, "green": %i, "blue": %i, "brightness": %f }' % (r, g, b, bright)
+    hostname = socket.gethostname()
+    return '{ "hostname": "%s", "red": %i, "green": %i, "blue": %i, "brightness": %f }' % (hostname, r, g, b, bright)
 
 @application.hook('after_request')
 def access_control():

@@ -106,7 +106,6 @@ def call_tally_light(source, color, brightness):
 
 	except urllib.error.URLError as err:
 		obs.script_log(obs.LOG_WARNING, 'Error connecting to tally light URL %s: %s' % (url, err.reason))
-		obs.remove_current_callback()
 
 def get_item_names_by_scene(source):
 	item_names = []

@@ -17,15 +17,11 @@ from bottle import Bottle, route, request, response
 light_module = configuration.get('light_module')
 gpio_module = configuration.get('gpio_module')
 
-if light_module == 'mock':
-    from tallypi.webapp.light.mock import Light
-else:
-    from tallypi.webapp.light.unicornhat import Light
+if light_module == 'mock': from tallypi.webapp.light.mock import Light
+else: from tallypi.webapp.light.unicornhat import Light
 
-if gpio_module == 'mock':
-    from tallypi.webapp.powerswitch.mock import PowerSwitch
-else:
-    from tallypi.webapp.powerswitch.rpi import PowerSwitch
+if gpio_module == 'mock': from tallypi.webapp.powerswitch.mock import PowerSwitch
+else: from tallypi.webapp.powerswitch.rpi import PowerSwitch
 
 pHat = Light()
 power_switch = PowerSwitch()

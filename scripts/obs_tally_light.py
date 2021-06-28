@@ -1,8 +1,10 @@
+from multiprocessing.dummy import Pool
 import obspython as obs
 import json
 import urllib.request
 import urllib.error
 
+threadpool = Pool(20)
 light_mapping = {}
 idle_color = int('FF0000FF', 16)
 idle_brightness = 5
@@ -125,14 +127,14 @@ def get_item_names_by_scene(source):
 def set_lights_by_items(item_names, color, brightness):
 	for item_name in item_names:
 		obs.script_log(obs.LOG_INFO, 'Calling Light for [%s]' % (item_name))
-		call_tally_light(item_name, color, brightness)
+		threadpool.apply_async(call_tally_light, (item_name, color, brightness))
 
 def set_idle_lights():
 	excluded_items = program_items + preview_items
 
 	for src, addr in light_mapping.items():
 		if src not in excluded_items:
-			call_tally_light(src, idle_color, idle_brightness)
+			threadpool.apply_async(call_tally_light, (src, idle_color, idle_brightness))
 
 def handle_preview_change():
 	global preview_items

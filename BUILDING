@@ -3,25 +3,25 @@ Building Binary Distributions
 
 Distributions are generated using stdeb, execute it on the Raspberry Pi to build for the correct architecture:
 
-    python setup.py --command-packages=stdeb.command bdist_deb
+    python3 setup.py --command-packages=stdeb.command bdist_deb
 
 To debug installation:
 
-    sudo dpkg -D113 -i ../python-tallypi_0.1.0-1_all.deb
+    sudo dpkg -D113 -i ../python3-tallypi_0.1.0-1_all.deb
 
 To completely uninstall:
 
-    sudo dpkg -P python-tallypi
+    sudo dpkg -P python3-tallypi
 
 To verify the files inside the package:
 
-    dpkg -c deb_dist/python-tallypi_0.1.0-1_all.deb
+    dpkg -c deb_dist/python3-tallypi_0.1.0-1_all.deb
 
 
 Requirements
 ============
 
-Requires python-stdeb and debhelper
+Requires python3-stdeb and debhelper
 
 
 Generating Debian Metadata
@@ -31,7 +31,7 @@ stdeb generates the debian/ folder automatically & this is version controlled.
 However, if it needs regeneration one can save python-tallypi.postinst to a
 separate directory, delete the debian/ directory, then re-issue:
 
-    python ./setup.py --command-packages=stdeb.command debianize
+    python3 ./setup.py --command-packages=stdeb.command debianize
 
 
 Running Locally

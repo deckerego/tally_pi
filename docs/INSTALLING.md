@@ -99,16 +99,16 @@ an SSH session:
 To install the TallyPi software, first install Python requirements from an
 SSH session on your Pi:
 
-    apt-get install python-bottle python-paste
+    apt-get install python3-bottle python3-paste
 
 Next, use wget to get the latest package of TallyPi from the release page
 at https://github.com/deckerego/tally_pi/releases. For example:
 
-    wget https://github.com/deckerego/tally_pi/releases/download/0.3.1/python-tallypi_0.3.1-1_all.deb
+    wget https://github.com/deckerego/tally_pi/releases/download/0.3.1/python3-tallypi_0.3.1-1_all.deb
 
 After downloading the package, install it using:
 
-    dpkg -i python-tallypi_0.3.1-1_all.deb
+    dpkg -i python3-tallypi_0.3.1-1_all.deb
 
 Once the software is installed, you can enable it with:
 

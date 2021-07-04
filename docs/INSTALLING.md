@@ -55,6 +55,7 @@ using `sudo raspi-config`.
 I would also recommend you set up Uncomplicated Firewall using:
 
     sudo apt-get install ufw
+    sudo ufw allow ssh
     sudo ufw allow 7413
     sudo ufw enable
 

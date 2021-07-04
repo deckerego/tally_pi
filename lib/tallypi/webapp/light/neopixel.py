@@ -1,4 +1,5 @@
 from tallypi.webapp.light.base import AbstractLight
+from tallypi.config import configuration
 import board
 import neopixel
 import logging
@@ -11,7 +12,8 @@ class Light(AbstractLight):
     keyword = 'light'
 
     def __init__(self):
-        self.pixels = neopixel.NeoPixel(board.D18, 50, auto_write=False)
+        led_count = int(configuration.get('light_led_count'))
+        self.pixels = neopixel.NeoPixel(board.D18, led_count, auto_write=False)
 
     def __del__(self):
         self.pixels.fill((0, 0, 0))

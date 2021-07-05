@@ -3,7 +3,9 @@
 The TallyPi service runs on the
 [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/)
 and allows for remote control of an
-[Pimoroni Unicorn pHat](https://shop.pimoroni.com/products/unicorn-phat).
+[Pimoroni Unicorn pHat](https://shop.pimoroni.com/products/unicorn-phat)
+or an
+[5x10 PixelLeaf RGB Matrix](https://www.tindie.com/products/oakdevtech/5x10-pixelleaf-rgb-matrix-sk6812mini-rgb-matrix/).
 This requires preparing your Raspberry Pi OS image,
 installing the libraries from Pimoroni, some Python libraries,
 and the TallyPi service itself.
@@ -85,8 +87,20 @@ To be safe, I also usually modify `/etc/dphys-swapfile` likewise to set:
 
 ## Installing the Unicorn pHat Libraries
 
-To install the Unicorn pHat Libraries on your Pi, run the following from
+If you wish to use NeoPixel hardware as the light for TallyPi,
+install the NeoPixel libraries on your Pi by runnning the following from
 an SSH session:
+
+    sudo apt-get install python3-pip
+    sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel
+    sudo python3 -m pip install --force-reinstall adafruit-blinka
+
+
+## Installing the Unicorn pHat Libraries
+
+If you wish to use the Unicorn pHat hardware as the light for TallyPi,
+install the Pimoroni Unicorn pHat libraries on your Pi by runnning the
+following from an SSH session:
 
     sudo apt-get update
     sudo apt-get dist-upgrade

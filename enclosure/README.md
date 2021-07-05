@@ -1,8 +1,8 @@
 # TallyPi Enclosure
 
 The contents of this directory include the Blender source design
-for the TallyPi enclosure, which can house a Raspberry Pi Zero W
-and a Pimoroni Unicorn pHat - plus a few buttons and switches.
+for the TallyPi enclosure, which can house a Raspberry Pi Zero W,
+a breakout board for LEDs, and a few buttons and switches.
 The STL files included are generated from the Blender design file.
 
 ## Attribution

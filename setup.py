@@ -34,6 +34,8 @@ setup(
     packages=[
         'tallypi',
         'tallypi.webapp',
+        'tallypi.webapp.light',
+        'tallypi.webapp.powerswitch'
     ],
     package_dir={
         '': 'lib'

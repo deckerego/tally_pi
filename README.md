@@ -8,10 +8,12 @@ extensible enough to use for whatever purposes you like.
 
 TallyPi is built for the
 [Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) and
-[Pimoroni Unicorn pHat](https://shop.pimoroni.com/products/unicorn-phat).
-It also supports hardware buttons/switches to shutdown the Pi and wake it back up.
+the NeoPixel platform, with the
+[5x10 PixelLeaf RGB Matrix](https://www.tindie.com/products/oakdevtech/5x10-pixelleaf-rgb-matrix-sk6812mini-rgb-matrix/)
+being the current breakout board validated for TallyPi. TallyPi also supports
+hardware buttons/switches to shutdown the Pi and wake it back up.
 
-Details on which pins to solder for the Unicorn pHat, and details on how to
+Details on which pins to user for the PixelLeaf RGB Matrix, and details on how to
 wire the on/off switch, are listed in [HARDWARE.md](./docs/HARDWARE.md).
 
 There is also an enclosure I've created for 3D printing - it's not great, but
@@ -22,7 +24,7 @@ or via [Thingiverse](https://www.thingiverse.com/thing:4590885).
 
 ## The Tally Light API
 
-A web service is provided to expose the Unicorn pHat through an HTTP interface.
+A web service is provided to expose NeoPixels through an HTTP interface.
 This controls color and brightness, and will monitor the on/off switch
 (if available) to shut down the light in an orderly fashion.
 
@@ -31,9 +33,9 @@ to be specified remotely. As an example:
 
     http://192.168.1.1:7413/set?color=AA22FF&brightness=0.3
 
-Would set the Unicorn pHat to purple across all LEDs, at 30% brightness.
+Would set the NeoPixels to be purple across all LEDs, at 30% brightness.
 
-The status of the Unicorn pHat is available as:
+The status of the LEDs are available as:
 
     http://192.168.1.1:7413/status
 

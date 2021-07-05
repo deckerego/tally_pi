@@ -1,8 +1,14 @@
 # Building the Tally Light Hardware
 
 The TallyPi light was initially created around the
-[Pimoroni Unicorn pHat](https://shop.pimoroni.com/products/unicorn-phat)
-LED board paired with a
+[Pimoroni Unicorn pHat](https://shop.pimoroni.com/products/unicorn-phat),
+however has since been expanded to use the NeoPixels platform using the
+[Adafruit Blinka library](https://github.com/adafruit/Adafruit_Blinka)
+and the Raspberry Pi CircuitPython libraries. Both platforms continue to be
+supported, however the default is now the NeoPixel driver.
+
+Although some might consider it overkill, the main platform running the drivers
+and powering the LEDs is suggested to be a
 [Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/).
 You can also print a custom enclosure to keep it all together and diffuse the
 bright LED lights.
@@ -10,7 +16,23 @@ bright LED lights.
 ![Unicorn pHat demo](./images/unicorn_hat_demo.gif)
 
 
-## Preparing the Unicorn pHat
+## Preparing an 5x10 PixelLeaf RGB Matrix
+
+The 5x10 PixelLeaf RGB Matrix is a NeoPixel based breakout board
+that follows the same setup & schematics as other NeoPixel boards.
+The PixelLeaf peforms well when powered by the 5V GPIO pin on a
+Raspberry Pi Zero W, even without level shifting, provided you use
+a 2A USB power adapter.
+
+If you follow the
+[Powering NeoPixels from Raspberry Pi Without Level Shifting](https://learn.adafruit.com/neopixels-on-raspberry-pi/raspberry-pi-wiring#powering-neopixels-from-raspberry-pi-without-level-shifting-3006456-7)
+guide on the Adafruit site, you find you only need to connect
+pin #2 5v power, pin #12 GPIO18, and any ground pin to the PixelLeaf.
+
+![NeoPixels on Raspberry Pi by Kattni Rembor (CC A-SA License)](./images/led_strips_raspi_NeoPixel_bb.png)
+
+
+## Preparing a Unicorn pHat
 
 The Unicorn pHat usually comes with an unsoldered header connector, which
 requires some assembly.

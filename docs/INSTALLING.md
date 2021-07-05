@@ -52,8 +52,6 @@ The first thing you want to do once the Pi is connected to your network is
 set a new password, set your hostname, and possibly expand your filesystem
 using `sudo raspi-config`.
 
-
-
 I would also recommend you set up Uncomplicated Firewall using:
 
     sudo apt-get install ufw
@@ -86,7 +84,40 @@ To be safe, I also usually modify `/etc/dphys-swapfile` likewise to set:
     CONF_SWAPSIZE=0
 
 
-## Installing the Unicorn pHat Libraries
+## Installing the TallyPi Service
+
+    To install the TallyPi software, first install Python requirements from an
+    SSH session on your Pi:
+
+        apt-get install python3-bottle python3-paste
+
+    Next, use wget to get the latest package of TallyPi from the release page
+    at https://github.com/deckerego/tally_pi/releases. For example:
+
+        wget https://github.com/deckerego/tally_pi/releases/download/0.3.1/python3-tallypi_0.3.1-1_all.deb
+
+    After downloading the package, install it using:
+
+        dpkg -i python3-tallypi_0.3.1-1_all.deb
+
+    Once the software is installed, you can enable it with:
+
+        sudo systemctl enable tallypi
+
+    Then reboot your Pi for everything to kick off!
+
+
+## Installing the Light Modules
+
+Currently there are three different light modules you can specify within the
+TallyPi configuration file at `/etc/tallypi.conf`: the default `neopixel`
+module that users the Adafruit Blinka libraries, the `unicornhat` module
+for the Pimoroni Unicorn pHat, and the `mock` module for testing. Aside from
+setting the correct value for `light_module` in `/etc/tallypi.conf`, you
+will also need to install the necessary libraries to drive the appropriate
+type of device.
+
+### Installing the NeoPixel Libraries
 
 If you wish to use NeoPixel hardware as the light for TallyPi,
 install the NeoPixel libraries on your Pi by runnning the following from
@@ -96,8 +127,19 @@ an SSH session:
     sudo pip3 install rpi_ws281x adafruit-circuitpython-neopixel
     sudo python3 -m pip install --force-reinstall adafruit-blinka
 
+After those libraries are installed, set the LED count and light module in
+`/etc/tallypi.conf`, as in:
 
-## Installing the Unicorn pHat Libraries
+    {
+      "light_module": "neopixel",
+      "light_led_count": 50,
+      "gpio_module": "rpi"
+    }
+
+In this case, we are specifying 50 LEDs (as would be used in
+the 5x10 PixelLeaf RGB Matrix breakout board).
+
+### Installing the Unicorn pHat Libraries
 
 If you wish to use the Unicorn pHat hardware as the light for TallyPi,
 install the Pimoroni Unicorn pHat libraries on your Pi by runnning the
@@ -108,28 +150,15 @@ following from an SSH session:
     sudo apt-get clean
     curl https://get.pimoroni.com/unicornhat  | bash
 
+After those libraries are installed, light module in `/etc/tallypi.conf` as in:
 
-## Installing the TallyPi Service
+    {
+      "light_module": "unicornhat",
+      "gpio_module": "rpi"
+    }
 
-To install the TallyPi software, first install Python requirements from an
-SSH session on your Pi:
-
-    apt-get install python3-bottle python3-paste
-
-Next, use wget to get the latest package of TallyPi from the release page
-at https://github.com/deckerego/tally_pi/releases. For example:
-
-    wget https://github.com/deckerego/tally_pi/releases/download/0.3.1/python3-tallypi_0.3.1-1_all.deb
-
-After downloading the package, install it using:
-
-    dpkg -i python3-tallypi_0.3.1-1_all.deb
-
-Once the software is installed, you can enable it with:
-
-    sudo systemctl enable tallypi
-
-Then reboot your Pi for everything to kick off!
+The number of LEDs are hard-coded in this instance and do not need
+to be configured.
 
 
 ## Testing the TallyPi Service

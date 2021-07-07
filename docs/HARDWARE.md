@@ -2,10 +2,16 @@
 
 The TallyPi light was initially created around the
 [Pimoroni Unicorn pHat](https://shop.pimoroni.com/products/unicorn-phat),
-however has since been expanded to use the NeoPixels platform using the
+however once that was discontinued support was expanded to
+the NeoPixel platform using the
 [Adafruit Blinka library](https://github.com/adafruit/Adafruit_Blinka)
-and the Raspberry Pi CircuitPython libraries. Both platforms continue to be
-supported, however the default is now the NeoPixel driver.
+and the Raspberry Pi CircuitPython libraries. In addition TallyPi supports
+Pimoroni's newer (and still available)
+[Blinkt! pHat](https://shop.pimoroni.com/products/blinkt), which has fewer
+LEDs but is extremely simple to install.
+
+All of these LED platforms continue to be supported, however the default
+is considered to be the NeoPixel driver.
 
 Although some might consider it overkill, the main platform running the drivers
 and powering the LEDs is suggested to be a
@@ -30,6 +36,14 @@ guide on the Adafruit site, you find you only need to connect
 pin #2 5v power, pin #12 GPIO18, and any ground pin to the PixelLeaf.
 
 ![NeoPixels on Raspberry Pi by Kattni Rembor (CC A-SA License)](./images/led_strips_raspi_NeoPixel_bb.png)
+
+
+## Preparing a Blinkt! pHat
+
+The Pimoroni Blinkt! pHat comes fully assembled and doesn't require soldering.
+Simply place it over the Raspberry Pi Zero W's GPIO pins, taking extra care to
+plug in the Blinkt! the correct way... the rounted edges of the Blinkt!
+should be at the top, matching the rounded edges of the Pi underneath.
 
 
 ## Preparing a Unicorn pHat

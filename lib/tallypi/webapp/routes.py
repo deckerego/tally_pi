@@ -15,6 +15,7 @@ light_module = configuration.get('light_module')
 gpio_module = configuration.get('gpio_module')
 
 if light_module == 'mock': from tallypi.webapp.light.mock import Light
+elif light_module == 'blinkt': from tallypi.webapp.light.blinkt import Light
 elif light_module == 'unicornhat': from tallypi.webapp.light.unicornhat import Light
 else: from tallypi.webapp.light.neopixel import Light
 

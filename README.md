@@ -8,17 +8,20 @@ extensible enough to use for whatever purposes you like.
 
 TallyPi is built for the
 [Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-zero-w/) and
-the NeoPixel platform, with the
+a variety of LED breakout boards, including the
+[Pimoroni Blinkt!](https://shop.pimoroni.com/products/blinkt) as well as the
+the NeoPixel platform. The
 [5x10 PixelLeaf RGB Matrix](https://www.tindie.com/products/oakdevtech/5x10-pixelleaf-rgb-matrix-sk6812mini-rgb-matrix/)
-being the current breakout board validated for TallyPi. TallyPi also supports
-hardware buttons/switches to shutdown the Pi and wake it back up.
+is the current breakout board validated for TallyPi.
 
-Details on which pins to user for the PixelLeaf RGB Matrix, and details on how to
+TallyPi also supports hardware buttons/switches to shutdown the Pi and wake it back up.
+
+Details on how to wire up the LED breakout boards, as well as details on how to
 wire the on/off switch, are listed in [HARDWARE.md](./docs/HARDWARE.md).
 
-There is also an enclosure I've created for 3D printing - it's not great, but
-it works as a light diffuser and includes a mount for a camera flash bracket.
-It is available from this repository
+There is also an enclosure supplied with TallyPi that can be 3D printed.
+It's not great, but it works as a light diffuser and includes a mount for a
+camera flash bracket. It is available from this repository
 or via [Thingiverse](https://www.thingiverse.com/thing:4590885).
 
 

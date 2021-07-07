@@ -112,11 +112,11 @@ Then reboot your Pi for everything to kick off!
 
 Currently there are three different light modules you can specify within the
 TallyPi configuration file at `/etc/tallypi.conf`: the default `neopixel`
-module that users the Adafruit Blinka libraries, the `unicornhat` module
-for the Pimoroni Unicorn pHat, and the `mock` module for testing. Aside from
-setting the correct value for `light_module` in `/etc/tallypi.conf`, you
-will also need to install the necessary libraries to drive the appropriate
-type of device.
+module that users the Adafruit Blinka libraries, the `blinka` module for
+the Pimoroni Blinka! pHat, the `unicornhat` module for the Pimoroni Unicorn
+pHat, and the `mock` module for testing. Aside from setting the correct value
+for `light_module` in `/etc/tallypi.conf`, you will also need to install the
+necessary libraries to drive the appropriate type of device.
 
 ### Installing the NeoPixel Libraries
 
@@ -148,6 +148,7 @@ install the
 [Pimoroni Blinkt! pHat libraries](https://github.com/pimoroni/blinkt)
 on your Pi by runnning the following from an SSH session:
 
+    sudo apt-get install python3-pip
     sudo apt-get install python3-blinkt
 
 After those libraries are installed, light module in `/etc/tallypi.conf` as in:

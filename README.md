@@ -12,7 +12,7 @@ a variety of LED breakout boards, including the
 [Pimoroni Blinkt!](https://shop.pimoroni.com/products/blinkt) as well as the
 the NeoPixel platform. The
 [5x10 PixelLeaf RGB Matrix](https://www.tindie.com/products/oakdevtech/5x10-pixelleaf-rgb-matrix-sk6812mini-rgb-matrix/)
-is the current breakout board validated for TallyPi.
+is the current NeoPixel breakout board validated for TallyPi.
 
 TallyPi also supports hardware buttons/switches to shutdown the Pi and wake it back up.
 

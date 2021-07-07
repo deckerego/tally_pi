@@ -3,7 +3,7 @@
 The TallyPi light was initially created around the
 [Pimoroni Unicorn pHat](https://shop.pimoroni.com/products/unicorn-phat),
 however once that was discontinued support was expanded to
-the NeoPixels platform using the
+the NeoPixel platform using the
 [Adafruit Blinka library](https://github.com/adafruit/Adafruit_Blinka)
 and the Raspberry Pi CircuitPython libraries. In addition TallyPi supports
 Pimoroni's newer (and still available)

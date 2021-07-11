@@ -16,7 +16,7 @@ class Light(AbstractLight):
         uh.off()
 
     def setColor(self, red, green, blue):
-        uh.set_all(red, green, blue)
+        uh.set_all(int(red), int(green), int(blue))
         uh.show()
 
     def getColor(self):

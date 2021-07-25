@@ -1,9 +1,10 @@
-import concurrent.futures
+from concurrent.futures import ThreadPoolExecutor
 import obspython as obs
 import json
 import urllib.request
 import urllib.error
 
+threadpool = ThreadPoolExecutor()
 light_mapping = {}
 idle_color = int('FF0000FF', 16)
 idle_brightness = 5
@@ -126,16 +127,14 @@ def get_item_names_by_scene(source):
 def set_lights_by_items(item_names, color, brightness):
 	for item_name in item_names:
 		obs.script_log(obs.LOG_INFO, 'Calling Light for [%s]' % (item_name))
-		with concurrent.futures.ThreadPoolExecutor() as executor:
-			future_call = executor.submit(call_tally_light, item_name, color, brightness)
+		threadpool.submit(call_tally_light, item_name, color, brightness)
 
 def set_idle_lights():
 	excluded_items = program_items + preview_items
 
 	for src, addr in light_mapping.items():
 		if src not in excluded_items:
-			with concurrent.futures.ThreadPoolExecutor() as executor:
-				future_call = executor.submit(call_tally_light, src, idle_color, idle_color)
+			threadpool.submit(call_tally_light, src, idle_color, idle_color)
 
 def handle_preview_change():
 	global preview_items
@@ -164,5 +163,6 @@ def handle_program_change():
 	set_idle_lights()
 
 def handle_exit():
+	threadpool.shutdown()
 	for src, addr in light_mapping.items():
 		call_tally_light(src, "00000000", 0)

@@ -1,10 +1,12 @@
 from concurrent.futures import ThreadPoolExecutor
+from queue import SimpleQueue
 import obspython as obs
 import json
 import urllib.request
 import urllib.error
 
-threadpool = ThreadPoolExecutor()
+threadpool = ThreadPoolExecutor(max_workers = 1)
+commandQueue = SimpleQueue()
 light_mapping = {}
 idle_color = int('FF0000FF', 16)
 idle_brightness = 5
@@ -88,16 +90,21 @@ def handle_event(event):
 
 
 def call_tally_light(source, color, brightness):
-	addr = light_mapping[source]
+	commandQueue.put({'source': source, 'color': color, 'brightness': brightness});
+	threadpool.submit(fetch_command);
+
+def fetch_command():
+	command = commandQueue.get()
+	addr = light_mapping[command['source']]
 	if not addr:
 		obs.script_log(obs.LOG_INFO, 'No tally light set for: %s' % (source))
 		return
 
-	hexColor = hex(color)
+	hexColor = hex(command['color'])
 	hexBlue = hexColor[4:6]
 	hexGreen = hexColor[6:8]
 	hexRed = hexColor[8:10]
-	pctBright = brightness / 10
+	pctBright = command['brightness'] / 10
 	url = 'http://%s:7413/set?color=%s%s%s&brightness=%f' % (addr, hexRed, hexGreen, hexBlue, pctBright)
 
 	try:
@@ -127,14 +134,14 @@ def get_item_names_by_scene(source):
 def set_lights_by_items(item_names, color, brightness):
 	for item_name in item_names:
 		obs.script_log(obs.LOG_INFO, 'Calling Light for [%s]' % (item_name))
-		threadpool.submit(call_tally_light, item_name, color, brightness)
+		call_tally_light(item_name, color, brightness)
 
 def set_idle_lights():
 	excluded_items = program_items + preview_items
 
 	for src, addr in light_mapping.items():
 		if src not in excluded_items:
-			threadpool.submit(call_tally_light, src, idle_color, idle_color)
+			call_tally_light(src, idle_color, idle_color)
 
 def handle_preview_change():
 	global preview_items

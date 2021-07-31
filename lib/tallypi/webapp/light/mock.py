@@ -1,6 +1,7 @@
 from tallypi.webapp.light.base import AbstractLight
 import logging
 import inspect
+import time
 
 logger = logging.getLogger('light')
 
@@ -11,6 +12,7 @@ class Light(AbstractLight):
     red, green, blue = 0, 0, 0
 
     def setColor(self, red, green, blue):
+        time.sleep(0.5)
         self.red = red
         self.green = green
         self.blue = blue

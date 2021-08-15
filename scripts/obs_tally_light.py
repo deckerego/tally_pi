@@ -141,7 +141,7 @@ def set_idle_lights():
 
 	for src, addr in light_mapping.items():
 		if src not in excluded_items:
-			call_tally_light(src, idle_color, idle_color)
+			call_tally_light(src, idle_color, idle_brightness)
 
 def handle_preview_change():
 	global preview_items

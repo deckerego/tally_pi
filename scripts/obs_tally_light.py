@@ -42,9 +42,12 @@ def script_update(settings):
 	global program_color
 	global program_brightness
 
+	video_source_names = list_video_source_names()
 	settings_map = settings_dict(settings)
+
 	for k, v in settings_map.items():
-		if k[0:6] != "tally^":
+		if k[0:6] != "tally^" and k in video_source_names:
+			obs.script_log(obs.LOG_INFO, 'Loaded: %s' % (k))
 			light_mapping[k] = v
 
 	idle_color = obs.obs_data_get_int(settings, "tally^IdleColor")
@@ -64,16 +67,9 @@ def script_properties():
 	obs.obs_properties_add_color(props, "tally^ProgramColor", "Live Color")
 	obs.obs_properties_add_int_slider(props, "tally^ProgramBrightness", "Live Brightness", 0, 10, 1)
 
-	sources = obs.obs_enum_sources()
-	if sources is not None:
-		for source in sources:
-			source_id = obs.obs_source_get_id(source)
-			if source_id in ['av_capture_input', 'droidcam_obs']:
-				source_name = obs.obs_source_get_name(source)
-				obs.script_log(obs.LOG_INFO, "Found source: " + source_name)
-				obs.obs_properties_add_text(props, source_name, source_name + " light addr:", obs.OBS_TEXT_DEFAULT)
-
-	obs.source_list_release(sources)
+	video_source_names = list_video_source_names()
+	for source_name in video_source_names:
+		obs.obs_properties_add_text(props, source_name, source_name + " light addr:", obs.OBS_TEXT_DEFAULT)
 
 	return props
 
@@ -115,6 +111,20 @@ def fetch_command():
 
 	except urllib.error.URLError as err:
 		obs.script_log(obs.LOG_WARNING, 'Error connecting to tally light URL %s: %s' % (url, err.reason))
+
+def list_video_source_names():
+	sources = obs.obs_enum_sources()
+	video_source_names = []
+
+	if sources is not None:
+		for source in sources:
+			source_id = obs.obs_source_get_id(source)
+			if source_id in ['av_capture_input', 'droidcam_obs']:
+				source_name = obs.obs_source_get_name(source)
+				video_source_names.append(source_name)
+
+	obs.source_list_release(sources)
+	return video_source_names
 
 def get_item_names_by_scene(source):
 	item_names = []

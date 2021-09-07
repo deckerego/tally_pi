@@ -1,4 +1,5 @@
 secrets = {
     'ssid' : '',
-    'password' : ''
+    'password' : '',
+    'hostname': 'tallyesp01'
     }

@@ -35,7 +35,7 @@ def _to_json(r, g, b, bright):
 
 @application.hook('after_request')
 def connection():
-    response.headers['Connection'] = 'Close'
+    response.headers['Connection'] = 'close'
 
 @application.hook('after_request')
 def access_control():

@@ -4,6 +4,7 @@ A network controlled tally light for cameras, intended for control by
 [TallyOBS](https://github.com/deckerego/tally_obs)
 but extensible enough to use for whatever purposes you like.
 
+![Unicorn pHat Demo](./docs/images/unicorn_hat_demo.gif)
 
 ## Hardware
 

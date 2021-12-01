@@ -13,11 +13,11 @@ LEDs but is extremely simple to install.
 All of these LED platforms continue to be supported, however the default
 is considered to be the NeoPixel driver.
 
-Although some might consider it overkill, the main platform running the drivers
-and powering the LEDs is suggested to be a
-[Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/).
-You can also print a custom enclosure to keep it all together and diffuse the
-bright LED lights.
+The
+[Raspberry Pi Zero W](https://www.raspberrypi.org/products/raspberry-pi-zero-w/)
+is the suggested Raspberry Pi platform given its size and built-in
+wireless adapter. You can also print a custom enclosure to keep it all together
+and diffuse the bright LED lights.
 
 ![Unicorn pHat demo](./images/unicorn_hat_demo.gif)
 

@@ -25,7 +25,7 @@ base_data_files = [
 
 setup(
     name='tallypi',
-    version='0.5.6',
+    version='1.0.0',
     description='A network controlled tally light for video cameras',
     author='DeckerEgo',
     author_email='john@deckerego.net',

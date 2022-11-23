@@ -9,10 +9,11 @@ console.setLevel(logging.WARNING)
 logger.addHandler(console)
 
 from tallypi.config import configuration
-from bottle import Bottle, route, request, response
+from bottle import Bottle, static_file, request, response
 
 light_module = configuration.get('light_module')
 gpio_module = configuration.get('gpio_module')
+static_file_root = configuration.get('static_file_root')
 
 if light_module == 'mock': from tallypi.webapp.light.mock import Light
 elif light_module == 'blinkt': from tallypi.webapp.light.blinkt import Light
@@ -42,6 +43,10 @@ def access_control():
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST'
     response.headers['Access-Control-Allow-Headers'] = 'Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token'
+
+@application.route('/dashboard')
+def dashboard():
+    return static_file('dashboard.html', root=static_file_root, mimetype='text/html')
 
 @application.route('/status')
 def light_status(light):

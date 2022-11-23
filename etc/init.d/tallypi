@@ -36,7 +36,7 @@ do_start()
 {
   start-stop-daemon --start --quiet --make-pidfile --pidfile $PIDFILE --startas $DAEMON --test > /dev/null \
     || return 1
-  start-stop-daemon --background --start --quiet --make-pidfile --pidfile $PIDFILE --startas $DAEMON -- \
+  start-stop-daemon --background --start --quiet --make-pidfile --pidfile $PIDFILE --startas $DAEMON -- --config "$CONFIG_FILE" --wwwdir "$WWW_DIR" \
     $DAEMON_ARGS \
     || return 2
 }

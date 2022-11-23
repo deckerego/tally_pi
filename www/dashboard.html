@@ -1,0 +1,268 @@
+<html>
+<head>
+  <title>Tally Light Control</title>
+  <link rel="shortcut icon" href="data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8' standalone='no'%3F%3E%3Csvg width='16' height='16' viewBox='0 0 4.2333333 4.2333333' version='1.1' id='svg5' inkscape:version='1.2.1 (9c6d41e4, 2022-07-14)' sodipodi:docname='icon.svg' xmlns:inkscape='http://www.inkscape.org/namespaces/inkscape' xmlns:sodipodi='http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd' xmlns='http://www.w3.org/2000/svg' xmlns:svg='http://www.w3.org/2000/svg'%3E%3Csodipodi:namedview id='namedview7' pagecolor='%23ffffff' bordercolor='%23000000' borderopacity='0.25' inkscape:showpageshadow='2' inkscape:pageopacity='0.0' inkscape:pagecheckerboard='0' inkscape:deskcolor='%23d1d1d1' inkscape:document-units='mm' showgrid='false' inkscape:zoom='31.135884' inkscape:cx='4.9942375' inkscape:cy='10.984111' inkscape:window-width='1680' inkscape:window-height='1050' inkscape:window-x='0' inkscape:window-y='0' inkscape:window-maximized='0' inkscape:current-layer='layer1' /%3E%3Cdefs id='defs2' /%3E%3Cg inkscape:label='Layer 1' inkscape:groupmode='layer' id='layer1'%3E%3Crect style='fill:%23000080;stroke-width:0.264583' id='rect221' width='4.0109129' height='1.7590234' x='0.11896773' y='0.79878354' ry='0.4163872' /%3E%3Crect style='fill:%2300ffff;stroke-width:0.232433' id='rect221-7' width='3.6200187' height='1.5040925' x='0.30591735' y='0.93049788' ry='0.35604122' /%3E%3Crect style='fill:%23000080;stroke-width:0.264583' id='rect407' width='1.2916501' height='0.45037797' x='1.5295856' y='2.557807' ry='0' /%3E%3Crect style='fill:%23000080;stroke-width:0.264583' id='rect409' width='3.6030238' height='0.31441483' x='0.33990788' y='3.0081849' ry='0.15720741' /%3E%3C/g%3E%3C/svg%3E%0A">
+  <style type="text/css">
+    body {
+      font-family: monospace;
+      font-size: 18px;
+    }
+
+    h1 {
+      font-family: monospace;
+      font-size: 24px;
+    }
+
+    div {
+      margin-bottom: 5px;
+    }
+
+    input {
+      font-family: monospace;
+      font-size: 18px;
+    }
+
+    button {
+      font-family: monospace;
+      font-size: 18px;
+      border: none;
+      border-radius: 2px;
+      background-color: #DFDFDF;
+      box-shadow: 0 4px 4px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+      margin-bottom: 8px;
+      transition-duration: 0.4s;
+    }
+
+    button:hover {
+      background-color: #4BB050;
+      color: #000000;
+    }
+
+    table {
+      font-family: monospace;
+      font-size: 18px;
+    }
+
+    th {
+      text-align: left;
+      border-bottom: 2px solid black;
+    }
+
+    td {
+      padding: 10px 40px 5px 5px;
+      border-bottom: 1px solid gray;
+    }
+
+    td.swatch {
+      width: 100px;
+      height: 100px;
+    }
+  </style>
+</head>
+
+<body onload="searchLights();">
+  <h1>Tally Light Controls</h1>
+
+  <table id="lights">
+  </table>
+
+  <table id="swatches">
+    <tr>
+      <th colspan="2">Black Body Illuminants</th>
+    </tr>
+    <tr>
+      <td style="background-color: #409cff" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #c9e2ff" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #fffffb" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #fffaf4" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+    </tr>
+    <tr>
+      <td style="background-color: #fff1e0" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #ffd6aa" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #ffc58f" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #ff9329" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+    </tr>
+    <tr>
+      <th colspan="2">Fluorescent Lights</th>
+    </tr>
+    <tr>
+      <td style="background-color: #a700ff" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #ffeff7" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #fff4f2" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #d4ebff" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #f4fffa" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #fff4e5" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+    </tr>
+    <tr>
+      <th colspan="2">Gaseous Light Sources</th>
+    </tr>
+    <tr>
+      <td style="background-color: #ffb74c" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #f2fcff" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #ffd1b2" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #d8f7ff" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+    </tr>
+    <tr>
+      <th colspan="2">Color Swatches</th>
+    </tr>
+    <tr>
+      <td style="background-color: #FC6ABE" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #DB5EE0" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #CE74F7" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #945EE0" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #7E6AFC" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+    </tr>
+    <tr>
+      <td style="background-color: #7A40F5" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #4B42FF" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #486BE8" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #429DFF" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #40C6F5" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+    </tr>
+    <tr>
+      <td style="background-color: #029CF6" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #02BDD4" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #0EEBC6" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #02D475" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #02F644" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+    </tr>
+    <tr>
+      <td style="background-color: #00F910" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #3BDB00" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #9AF20C" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #D4DB00" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #F9E300" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+    </tr>
+    <tr>
+      <td style="background-color: #ED8B07" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #F76E07" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #E04C12" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #F72807" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+      <td style="background-color: #ED070E" class="swatch" onClick="fromSwatch(this.style['background-color']);"/>
+    </tr>
+  </table>
+
+  <script type="text/javascript">
+    const host = window.location.host;
+
+    function searchLights() {
+      const status = document.getElementById("status");
+      const table = document.getElementById("lights");
+      const request = new XMLHttpRequest();
+
+      request.timeout = 5000;
+
+      request.onload = function(evt) {
+        const lightStatus = JSON.parse(request.responseText);
+        table.appendChild(createRow(lightStatus));
+      };
+
+      request.onerror = function(evt) {
+        request.abort();
+        console.log(`Error connecting to ${host}, continuing...`);
+      };
+
+      request.ontimeout = function(evt) {
+        console.log(`Timeout connecting to ${host}, continuing...`);
+      };
+
+      try {
+        request.open("GET", `http://${host}/status`, true);
+        request.send();
+      } catch(e) {
+        request.abort();
+        console.log(e);
+        console.log(`Could not connect to ${host}, continuing...`)
+      }
+    }
+
+    function fromSwatch(color) {
+      const colorArray = color.split(/\, |\(|\)/);
+      const red = parseInt(colorArray[1]).toString(16).padStart(2, 0);
+      const green = parseInt(colorArray[2]).toString(16).padStart(2, 0);
+      const blue = parseInt(colorArray[3]).toString(16).padStart(2, 0);
+      document.getElementById(`color`).value = `#${red}${green}${blue}`;
+      document.getElementById(`color`).dispatchEvent(new Event('change'));
+    }
+
+    function setLight() {
+      const color = document.getElementById(`color`).value.substring(1);
+      const brightness = document.getElementById(`bright`).value;
+
+      const request = new XMLHttpRequest();
+      request.timeout = 2000
+
+      request.onload = function(evt) {
+        const lightStatus = JSON.parse(request.responseText);
+        const row = document.getElementById(`row`);
+        row.replaceChildren(...createRow(lightStatus).children);
+      };
+      request.onerror = (evt) => console.log(`Error updating ${host}`);
+      request.ontimeout = (evt) => console.log(`Timeout updating ${host}`);
+
+      request.open("GET", `http://${host}/set?color=${color}&brightness=${brightness}`, true);
+      request.send();
+    }
+
+    function createRow(status) {
+      const color = `${status.red.toString(16).padStart(2, '0')}${status.green.toString(16).padStart(2, '0')}${status.blue.toString(16).padStart(2, '0')}`;
+
+      const row = document.createElement("TR");
+      row.id = `row`;
+      row.appendChild(createTextCell(status.hostname));
+      row.appendChild(createTextCell(host));
+      row.appendChild(createColorCell(color));
+      row.appendChild(createBrightnessCell(status.brightness));
+      return row;
+    }
+
+    function createTextCell(text) {
+      const txtContent = document.createTextNode(text);
+      const txtCell = document.createElement("TD");
+      txtCell.appendChild(txtContent);
+      return txtCell;
+    }
+
+    function createColorCell(color) {
+      const hexColor = `#${color}`;
+
+      const colorContent = document.createElement("input");
+      colorContent.type = "color";
+      colorContent.value = hexColor;
+      colorContent.id = `color`;
+      colorContent.addEventListener("change", () => setLight());
+
+      const txtContent = document.createTextNode(hexColor);
+      const colorLabel = document.createElement("label");
+      colorLabel.htmlFor = `color`;
+      colorLabel.appendChild(txtContent);
+
+      const colorCell = document.createElement("TD");
+      colorCell.appendChild(colorContent);
+      colorCell.appendChild(colorLabel);
+      return colorCell;
+    }
+
+    function createBrightnessCell(brightness) {
+      const brightContent = document.createElement("input");
+      brightContent.type = "range";
+      brightContent.min = 0;
+      brightContent.max = 1;
+      brightContent.step = 0.05;
+      brightContent.value = brightness;
+      brightContent.id = `bright`;
+      brightContent.addEventListener("change", () => setLight());
+
+      const txtContent = document.createTextNode(brightness);
+      const brightLabel = document.createElement("label");
+      brightLabel.htmlFor = `bright`;
+      brightLabel.appendChild(txtContent);
+
+      const brightCell = document.createElement("TD");
+      brightCell.appendChild(brightContent);
+      brightCell.appendChild(brightLabel);
+      return brightCell;
+    }
+  </script>
+</body>
+</html>

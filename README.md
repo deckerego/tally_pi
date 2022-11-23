@@ -44,5 +44,10 @@ The status of the LEDs are available as:
 
     http://192.168.1.1:7413/status
 
+If you would like to tweak an individual light, an HTML dashboard for 
+controlling colors and brightness is available at:
+
+    http://192.168.1.1:7413/dashboard
+
 Details on installing the software, as well as protecting your Pi for
 repeated use, is available within [INSTALLING.md](./docs/INSTALLING.md).

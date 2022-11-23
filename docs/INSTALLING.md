@@ -14,11 +14,18 @@ and the TallyPi service itself.
 
 ## WiFi Setup for the Raspberry Pi OS
 
-If you have loaded the stock
-[Raspberry Pi OS](https://www.raspberrypi.org/downloads/raspberry-pi-os/), you
-can set up wireless access for your Pi before it even boots. When you insert
-the SD card into your main Windows/Linux/MacOS computer. You should see two
-partitions or disk mounts appear - one of them will be labelled "BOOT":
+The easiest way to install & set up the Raspberry Pi OS is using the
+[Raspberry Pi Imager](https://www.raspberrypi.com/software/). With that
+app you can install the 32-bit mini OS on the Pi Zero W *and* configure
+WiFi a the same time. You can usually be up and running in under 10
+minutes with this option.
+
+If you are using an already installed version of 
+[Raspberry Pi OS](https://www.raspberrypi.org/downloads/raspberry-pi-os/), 
+you can set up or change wireless access for your Pi without connecting it 
+to a keyboard or a display. When you insert the SD card into your main 
+Windows/Linux/MacOS computer, you should see two partitions or disk mounts 
+appear - one of them will be labelled "BOOT":
 
 ![Mounting the boot partition](./images/boot_part.png)
 
@@ -90,16 +97,16 @@ To be safe, I also usually modify `/etc/dphys-swapfile` likewise to set:
 To install the TallyPi software, first install Python requirements from an
 SSH session on your Pi:
 
-    apt-get install python3-bottle python3-paste
+    sudo apt-get install python3-bottle python3-paste
 
 Next, use wget to get the latest package of TallyPi from the release page
 at https://github.com/deckerego/tally_pi/releases. For example:
 
-    wget https://github.com/deckerego/tally_pi/releases/download/0.3.1/python3-tallypi_0.3.1-1_all.deb
+    wget https://github.com/deckerego/tally_pi/releases/download/0.5.7/python3-tallypi_0.5.6-1_all.deb
 
 After downloading the package, install it using:
 
-    dpkg -i python3-tallypi_0.3.1-1_all.deb
+    sudo dpkg -i python3-tallypi_0.3.1-1_all.deb
 
 Once the software is installed, you can enable it with:
 

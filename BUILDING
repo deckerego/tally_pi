@@ -21,7 +21,7 @@ To verify the files inside the package:
 Requirements
 ============
 
-Requires python3-stdeb and debhelper
+Requires python3-stdeb, dh-python, and debhelper
 
 
 Generating Debian Metadata

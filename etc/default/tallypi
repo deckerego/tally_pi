@@ -1,0 +1,2 @@
+WWW_DIR=/srv/www
+CONFIG_FILE=/etc/tallypi.conf

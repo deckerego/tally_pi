@@ -9,7 +9,7 @@ def all_files(newroot, oldroot):
     for root, dirs, files in os.walk(oldroot):
         fds = []
         for fd in files:
-            if not fd[0] is '.':
+            if fd[0] != '.':
                 fds.append(os.path.join(root, fd))
         relpath = os.path.relpath(root, oldroot)
         fdtuple = (os.path.join(newroot, relpath), fds)
@@ -20,12 +20,13 @@ base_data_files = [
     ('/etc',    ['etc/tallypi.conf']),
     ('/etc/init.d',    ['etc/init.d/tallypi']),
     ('/etc/default',    ['etc/default/tallypi']),
-    ('/usr/share/doc/tallypi', ['README.md', 'LICENSE'])
+    ('/usr/share/doc/tallypi', ['README.md', 'LICENSE']),
+    ('/srv/www', ['www/dashboard.html'])
 ]
 
 setup(
     name='tallypi',
-    version='1.0.0',
+    version='0.6.0',
     description='A network controlled tally light for video cameras',
     author='DeckerEgo',
     author_email='john@deckerego.net',

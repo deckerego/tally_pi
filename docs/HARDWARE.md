@@ -72,7 +72,9 @@ In addition, the TallyPi service will monitor pins 5 and 6 to notice a
 state change and initiate an operating system shutdown.
 
 By connecting pins 5 and 6 to a button or a switch, you can easily create a
-power on and off button or switch.
+power on and off button or switch. Bear in mind that `dtoverlay=gpio-shutdown`
+needs to be present within `/boot/config.txt` for the OS to monitor 
+GPIO pins for shutdown.
 
 ![Headers for an on/off switch](./images/pi_bottom_headers.jpg)
 

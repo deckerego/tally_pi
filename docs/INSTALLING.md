@@ -91,6 +91,12 @@ To be safe, I also usually modify `/etc/dphys-swapfile` likewise to set:
 
     CONF_SWAPSIZE=0
 
+It also never hurts to ensure that if your RPi does crash, it reboots automatically.
+The easiest way to do that is to add a sysctl parameter to reboot after a panic
+by adding the following to `/etc/sysctl.d/98-rpi.conf`:
+
+    kernel.panic = 3
+
 
 ## Installing the TallyPi Service
 

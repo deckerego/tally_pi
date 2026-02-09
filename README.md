@@ -4,7 +4,10 @@ A network controlled tally light for cameras, intended for control by
 [TallyOBS](https://github.com/deckerego/tally_obs)
 but extensible enough to use for whatever purposes you like.
 
-![Unicorn pHat Demo](./docs/images/unicorn_hat_demo.gif)
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=eRcYikv5V9U" target="_blank">
+ <img src="http://img.youtube.com/vi/eRcYikv5V9U/mqdefault.jpg" alt="Overview of TallyOBS / Pi / CircuitPy" width="320" height="240" border="10" />
+</a>
+
 
 ## Hardware
 
